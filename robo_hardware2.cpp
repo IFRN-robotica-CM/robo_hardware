@@ -62,6 +62,8 @@ void robo_hardware::configurar(bool habilitar_garra){
   pinMode(LED_SENSOR_LINHA_ESQUERDO, OUTPUT);
   pinMode(LED_SENSOR_LINHA_DIREITO, OUTPUT);
   pinMode(LED_SENSOR_LINHA_MAIS_DIREITO, OUTPUT);
+  pinMode(LED_SENSOR_LINHA_CENTRAL, OUTPUT);
+  pinMode(LED_SENSOR_LINHA_FRONTAL, OUTPUT);
 	
 	botao1.config();
 	botao2.config();
@@ -93,6 +95,13 @@ const float robo_hardware::lerSensorDeLinha(const int sensor, bool ledLigado=tru
 
 		case SENSOR_LINHA_MAIS_DIREITO:
 			pino = LED_SENSOR_LINHA_MAIS_DIREITO;
+		break;
+		
+		case SENSOR_LINHA_CENTRAL:
+			pino = LED_SENSOR_LINHA_CENTRAL;
+		break;
+		case SENSOR_LINHA_FRONTAL:
+			pino = LED_SENSOR_LINHA_FRONTAL;
 		break;
 	}
 

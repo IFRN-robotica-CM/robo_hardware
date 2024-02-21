@@ -74,6 +74,8 @@ public:
 	inline const float lerSensorLinhaMaisEsq(){	return lerSensorDeLinha(SENSOR_LINHA_MAIS_ESQUERDO);} //retorna um valor de 0 a 100 
 	inline const float lerSensorLinhaDir(){			return lerSensorDeLinha(SENSOR_LINHA_DIREITO);} //retorna um valor de 0 a 100
 	inline const float lerSensorLinhaMaisDir(){	return lerSensorDeLinha(SENSOR_LINHA_MAIS_DIREITO);} //retorna um valor de 0 a 100
+	inline const float lerSensorLinhaCentral(){	return lerSensorDeLinha(SENSOR_LINHA_CENTRAL);} //retorna um valor de 0 a 100
+	inline const float lerSensorLinhaFrontal(){	return lerSensorDeLinha(SENSOR_LINHA_FRONTAL);} //retorna um valor de 0 a 100
 
 
   inline const float lerSensorLinhaEsqSemRuido(){			return lerDadosSensorLinhaEsq();} //retorna um valor de 0 a 100  
@@ -88,7 +90,7 @@ public:
 	inline const float lerDadosSensorLinhaMaisEsq(){return lerDadosSensorDeLinha(SENSOR_LINHA_MAIS_ESQUERDO);}
 	inline const float lerDadosSensorLinhaDir(){return lerDadosSensorDeLinha(SENSOR_LINHA_DIREITO);}
 	inline const float lerDadosSensorLinhaMaisDir(){return lerDadosSensorDeLinha(SENSOR_LINHA_MAIS_DIREITO);}
-
+	
 
 
 	//A funcao para acionar os motores de locomocao do robo
