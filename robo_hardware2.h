@@ -5,17 +5,13 @@
 
 
 #include <Arduino.h>
-#include <Servo.h>
 
 #include "cor.h"
 #include "pinagem.h"
 #include "Ultrasonic.h"
 
-#include "EEPROM2.h"
-#include "CorTcs23.h"
 #include "CorTcs34.h"
 
-#include "led_botoes/Botao.h"
 #include "led_botoes/Led.h"
 
 enum{
@@ -65,7 +61,6 @@ public:
   robo_hardware();
   void configurar(bool habilitar_garra=true);
 	void habilitaTCS34();
-	void habilitaTCS23();
 //  boolean lerSensorFimDeCurso();
 
 	//As funcoes retornam o valor lido do sensor refletancia
@@ -96,12 +91,6 @@ public:
 	//A funcao so recebe valores que variem de 100 ate -100
   void acionarMotores(float percetualMotorEsquerdo, float percetualMotorDireito);
 
-	//funcao para acionar os servomotores
-  void acionarServoGarra1(int angInicial, int angFinal, int tempo);
-  void acionarServoGarra2(int angInicial, int angFinal, int tempo);
-  void acionarServoGarra1(int angFinal);
-  void acionarServoGarra2(int angFinal);
-
 	float lerSensorSonarFrontal();
 	float lerSensorSonarEsq();
 	float lerSensorSonarDir();  
@@ -120,34 +109,18 @@ public:
 	void ligarTodosLeds()const;
 	void desligarTodosLeds()const;
 
-	inline const bool botao1Pressionado()const{return botao1.estaPressionado();}
-	inline const bool botao2Pressionado()const{return botao2.estaPressionado();}
-	inline const bool botao3Pressionado()const{return botao3.estaPressionado();}
-
 private:
 
   static int tipoSensorCor;
-  static Servo servoGarra1;
-  static Servo servoGarra2;
   void tensao(float valor_por_cento,int pino);
-  //SensorCor cor_direita(s2,s3, out);  
-  
-  //SensorCor corDireita;
-  //SensorCor corEsquerda;
-
-  CorTcs23 corDireita;
-  CorTcs23 corEsquerda;
 
   CorTcs34 corDireita34;
   CorTcs34 corEsquerda34;
 
 
 	Ultrasonic sonarFrontal;
-	Ultrasonic sonarEsq;
-	Ultrasonic sonarDir;
 	
-	Botao botao1, botao2, botao3;
-	Led	led1, led2, led3;
+	Led	led1, led2;
 };
 
 static robo_hardware robo;
