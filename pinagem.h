@@ -6,66 +6,56 @@
 /*
 Arduino UNO pinout
 
-13-									SENSOR_COR_ESQ_OUT
-12-									SENSOR_COR_ESQ_S3
-11-	PWM (Timer 2)		SENSOR_COR_ESQ_S2
-10-	PWM	(Timer 1)		SERVO_GARRA_1
-09-	PWM	(Timer 1)		SERVO_GARRA_2
-08-									SENSOR_COR_DIR_OUT
-07-									SENTIDO_RODA_DIREITA
-06-	PWM (TIMER 0)		PWM_RODA_DIREITA
-05- PWM (TIMER 0)		PWM_RODA_ESQUERDA
-04-									SENTIDO_RODA_ESQUERDA
-03-	PWM	(Timer 2)		SENSOR_COR_DIR_S3
-02-									SENSOR_COR_DIR_S2
-01-	Tx							SONAR_TRIGGER_LATERAL
-00-	Rx							SONAR_ECHO_LATERAL
+13- SONAR_ECHO_FRONTAL
+12-	SONAR_TRIGGER_FRONTAL
+11-	LED_SENSOR_LINHA_MAIS_DIREITO
+10-	LED_SENSOR_DIREITO
+09-	LED_SENSOR_ESQUERDO
+08-	LED_SENSOR_LINHA_MAIS_ESQUERDO
+07-	SENTIDO_RODA_DIREITA
+06-	PWM_RODA_DIREITA
+05- PWM_RODA_ESQUERDA
+04-	SENTIDO_RODA_ESQUERDA
+03-	SENSOR_COR_DIR_TCS34
+02- SENSOR_COR_ESQ_TCS34
+01-	Tx LED 1
+00-	Rx LED 2
 
-A0- 								SENSOR_LINHA_MAIS_ESQUERDO
-A1-									SENSOR_LINHA_ESQUERDO
-A2-									SENSOR_LINHA_DIREITO
-A3-									SENSOR_LINHA_MAIS_DIREITO
-A4-	SDA							SONAR_TRIGGER_FRONTAL
-A5-	SCL							SONAR_ECHO_FRONTAL
+A0- SENSOR_LINHA_MAIS_DIREITO
+A1- SENSOR_LINHA_DIREITO
+A2- SENSOR_LINHA_ESQUERDO
+A3- SENSOR_LINHA_MAIS_ESQUERDO
+A4-	SDA							
+A5-	SCL							
 
 
 */
 
 
 class pinagem{
+	#define PWM_RODA_ESQUERDA 		5		    //Define o pino que ligara o motor esquerdo para mudar a velocidade de rotacao
+	#define SENTIDO_RODA_ESQUERDA   4		    //Define o pino que ligara o motor esquerdo para mudar o sentido de rotacao
+	#define PWM_RODA_DIREITA 	    6	        //Define o pino que ligara o motor direito para mudar a velocidade de rotacao
+	#define SENTIDO_RODA_DIREITA 	7		    //Define o pino que ligara o motor direito para mudar o sentido de rotacao
 
-	//***PARA ARDUINO UNO E PRO MINI DEVE-SE UTILIZAR PARA MOTORES DC O PWM SOMENTE NAS PORTAS 5 E 6 ***///
-	#define PWM_RODA_ESQUERDA 		5		//Define o pino que ligara o motor esquerdo para mudar a velocidade de rotacao
-	#define SENTIDO_RODA_ESQUERDA 4		//Define o pino que ligara o motor esquerdo para mudar o sentido de rotacao
+	#define SENSOR_LINHA_MAIS_ESQUERDO	A3	    //Define o pino do sensor de refletancia mais esquerdo
+	#define SENSOR_LINHA_ESQUERDO	    A2	    //Define o pino do sensor de refletancia esquerdo
+	#define SENSOR_LINHA_DIREITO	    A1	    //Define o pino do sensor de refletancia direito
+	#define SENSOR_LINHA_MAIS_DIREITO	A0	    //Define o pino do sensor de refletancia mais direito
 
-	//***PARA ARDUINO UNO E PRO MINI DEVE-SE UTILIZAR PARA MOTORES DC O PWM SOMENTE NAS PORTAS 5 E 6 ***///
-	#define PWM_RODA_DIREITA 			6		//Define o pino que ligara o motor direito para mudar a velocidade de rotacao
-	#define SENTIDO_RODA_DIREITA 	7		//Define o pino que ligara o motor direito para mudar o sentido de rotacao
+	#define LED_SENSOR_LINHA_MAIS_ESQUERDO 8    //Define o pino para ligar o sensor de refletancia mais esquerdo
+	#define LED_SENSOR_LINHA_ESQUERDO      9    //Define o pino para ligar o sensor de refletancia esquerdo
+	#define LED_SENSOR_LINHA_DIREITO       10   //Define o pino para ligar o sensor de refletancia direito
+	#define LED_SENSOR_LINHA_MAIS_DIREITO  11   //Define o pino para ligar o sensor de refletancia mais direito
 
-	//A presente biblioteca utiliza dois sensores de refletancia ou sensores de linha
-	#define SENSOR_LINHA_MAIS_ESQUERDO	A0	//Define o pino do sensor de refletancia esquerdo
-	#define SENSOR_LINHA_ESQUERDO	A1	//Define o pino do sensor de refletancia esquerdo
-	#define SENSOR_LINHA_DIREITO	A2	//Define o pino do sensor de refletancia direito
-	#define SENSOR_LINHA_MAIS_DIREITO	A3	//Define o pino do sensor de refletancia direito
+	#define SENSOR_COR_DIR_TCS34	3          //Define o pino para ligar o sensor de cor direito
+	#define SENSOR_COR_ESQ_TCS34	2          //Define o pino para ligar o sensor de cor esquerdo
 
-	#define LED_SENSOR_LINHA_MAIS_ESQUERDO 12
-	#define LED_SENSOR_LINHA_ESQUERDO 13
-	#define LED_SENSOR_LINHA_DIREITO 3
-	#define LED_SENSOR_LINHA_MAIS_DIREITO 2
+	#define SONAR_TRIGGER_FRONTAL	12           //Define o pino tigger do sensor sonar
+	#define SONAR_ECHO_FRONTAL		13          //Define o pino echo do sensor sonar
 
-	//A biblioteca possui dois sensores de cor: um esquerdo e outro direito.
-	//cada sensor de cor precisa de 3 pinos para configuracao e leitura da cor
-	//Os pinos dos sensores de cor são específicos para o arduino UNO e podem ser modificados para o arduino mega
-
-	#define SENSOR_COR_DIR_TCS34	11
-	#define SENSOR_COR_ESQ_TCS34	10
-
-	//A biblioteca possui dois sensores de distancia (Sonares)
-	#define SONAR_TRIGGER_FRONTAL	8 //Pino analogico A4
-	#define SONAR_ECHO_FRONTAL		9 //Pino analogico A5
-
-	#define LED_1		1
-	#define LED_2		0
+	#define LED_1		1                       //Define o pino do led 1 da placa
+	#define LED_2		0                       //Define o pino do led 2 da placa
 
 };
 
