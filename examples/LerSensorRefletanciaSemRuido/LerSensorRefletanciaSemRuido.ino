@@ -1,49 +1,46 @@
 #include <robo_hardware2.h> 
 #include <Servo.h>
 
-//********PINOS PARA SENSORES REFLETANCIA***********//
+//-----PINOS PARA SENSORES REFLETANCIA-----//
+//SENSOR_LINHA_MAIS_ESQUERDO	    A3
+//SENSOR_LINHA_ESQUERDO			    A2
+//SENSOR_LINHA_DIREITO			    A1	
+//SENSOR_LINHA_MAIS_DIREITO			A0	
 //
-//SENSOR_LINHA_MAIS_ESQUERDO		uno-A0;	mega-A0
-//SENSOR_LINHA_ESQUERDO			uno-A1;	mega-A1
-//SENSOR_LINHA_DIREITO			uno-A2;	mega-A2
-//SENSOR_LINHA_MAIS_DIREITO		uno-A3;	mega-A3
-//
-//*********PINOS PARA SENSORES REFLETANCIA*********//
+//LED_SENSOR_LINHA_MAIS_DIREITO     11
+//LED_SENSOR_DIREITO                10
+//LED_SENSOR_ESQUERDO                9
+//LED_SENSOR_LINHA_MAIS_ESQUERDO     8
+//-----PINOS PARA SENSORES REFLETANCIA-----//
 
-float valorSensor;
-float valorSensor_SemRuido;
-float valorSensor_Ruido;
+float valorSensorMaisEsq;
+float valorSensorEsq;
+float valorSensorDir;
+float valorSensorMaisDir;
 
 void setup(){
 	Serial.begin(9600);
-	robo.configurar(false);
+	robo.configurar();
 }
 
 void loop(){
-	valorSensor = robo.lerSensorLinhaEsq(); //le um valor do sensor esquerdo. O sensor retorna um valor de 0 100
-	//valorSensor = robo.lerSensorLinhaMaisEsq(); //le um valor do sensor mais esquerdo. O sensor retorna um valor de 0 100
-	//valorSensor = robo.lerSensorLinhaDir(); //le um valor do sensor direito. O sensor retorna um valor de 0 100
-	//valorSensor = robo.lerSensorLinhaMaisDir(); //le um valor do sensor mais direito. O sensor retorna um valor de 0 100
-	
-	valorSensor_SemRuido = robo.lerSensorLinhaEsqSemRuido();  //valor do sensor esquerdo sem ruido
-	//valorSensor_SemRuido = robo.lerSensorLinhaMaisEsqSemRuido();  //valor do sensor mais esquerdo sem ruido
-	//valorSensor_SemRuido = robo.lerSensorLinhaDirSemRuido();  //valor do sensor direito sem ruido
-	//valorSensor_SemRuido = robo.lerSensorLinhaMaisDirSemRuido();  //valor do sensor mais direito sem ruido
-	
-	valorSensor_Ruido = robo.lerSensorDeLinha(A0,false);
-	//valorSensor_Ruido = robo.lerSensorDeLinha(A1,false);
-	//valorSensor_Ruido = robo.lerSensorDeLinha(A2,false);	
-	//valorSensor_Ruido = robo.lerSensorDeLinha(A3,false);
-	
-	
-	Serial.print("Valor sensor: ");
-	Serial.println(valorSensor); //Imprime o valor do sensor pela porta serial
-	Serial.print("Valor sensor sem ruido: ");
-	Serial.println(valorSensor_SemRuido); //Imprime o valor do sensor pela porta serial
-	Serial.print("ruido do sensor: ");
-	Serial.println(valorSensor_Ruido); //Imprime o valor do sensor pela porta serial
+	valorSensorMaisEsq = robo.lerSensorLinhaMaisEsqSemRuido(); //le um valor do sensor. O sensor retornar um valor de 0 100
+	valorSensorEsq = robo.lerSensorLinhaEsqSemRuido();         //le um valor do sensor. O sensor retornar um valor de 0 100
+	valorSensorDir = robo.lerSensorLinhaDirSemRuido();         //le um valor do sensor. O sensor retornar um valor de 0 100
+	valorSensorMaisDir = robo.lerSensorLinhaMaisDirSemRuido(); //le um valor do sensor. O sensor retornar um valor de 0 100
+
+	//Impressão dos valores dos sensores
+	Serial.print("Sensores refletancia sem ruido: +esq: ");
+	Serial.print(valorSensorMaisEsq);   //Imprime o valor do sensor pela porta serial
+	Serial.print("; esq: ");
+	Serial.print(valorSensorEsq);       //Imprime o valor do sensor pela porta serial
+	Serial.print("; dir: ");
+	Serial.print(valorSensorDir);       //Imprime o valor do sensor pela porta serial
+	Serial.print("; +dir: ");
+	Serial.println(valorSensorMaisDir); //Imprime o valor do sensor pela porta serial
 
 	delay(1000);
 
 }
+
 
