@@ -4,12 +4,11 @@
 int robo_hardware::tipoSensorCor;
 
 //----- construtor -----//
-robo_hardware::robo_hardware():	corDireita34(SENSOR_COR_DIR_TCS34),
-							    corEsquerda34(SENSOR_COR_ESQ_TCS34),
-								sonarFrontal(SONAR_TRIGGER_FRONTAL, SONAR_ECHO_FRONTAL),
-								led1(LED_1), led2(LED_2)
+robo_hardware::robo_hardware():	//corDireita34(SENSOR_COR_DIR_TCS34),
+							    //corEsquerda34(SENSOR_COR_ESQ_TCS34),
+								sonarFrontal(SONAR_TRIGGER_FRONTAL, SONAR_ECHO_FRONTAL)
 {
-	tipoSensorCor = TCS34;
+	//tipoSensorCor = TCS34;
 }
 
 //----- funções de controle dos motores -----//
@@ -71,11 +70,17 @@ void robo_hardware::configurar(){
 	pinMode(SENSOR_LINHA_DIREITO, INPUT);
 	pinMode(SENSOR_LINHA_MAIS_DIREITO, INPUT);
 
-	led1.config();
-	led2.config();
+	//Configura pinos para ligar os LEDS
+	pinMode(LED_SMD_VERDE, OUTPUT);
+	pinMode(LED_SMD_VERMELHO, OUTPUT);
 
-	corDireita34.config();
-	corEsquerda34.config();
+	pinMode(LED_AMARELO, OUTPUT);
+	pinMode(LED_AZUL, OUTPUT);
+	pinMode(LED_VERMELHO, OUTPUT);
+	pinMode(LED_VERDE, OUTPUT);
+
+	// corDireita34.config();
+	// corEsquerda34.config();
 }
 
 //----- função para ler o sensor de linha com ruido -----//
@@ -154,55 +159,45 @@ float robo_hardware::lerSensorSonarFrontal(){
 }
 
 //----- funções para sensor de cor -----//
-HSV robo_hardware::getHSVEsquerdo(){
-  return corEsquerda34.getHSV();
-}
+// HSV robo_hardware::getHSVEsquerdo(){
+//   return corEsquerda34.getHSV();
+// }
 
-HSV robo_hardware::getHSVDireito(){
-  return corDireita34.getHSV();
-}
+// HSV robo_hardware::getHSVDireito(){
+//   return corDireita34.getHSV();
+// }
 
-RGB robo_hardware::getRGBEsquerdo(){
-  return corEsquerda34.getRGB();
-}
+// RGB robo_hardware::getRGBEsquerdo(){
+//   return corEsquerda34.getRGB();
+// }
 
-RGB robo_hardware::getRGBDireito(){
-      return corDireita34.getRGB();
-}
+// RGB robo_hardware::getRGBDireito(){
+//       return corDireita34.getRGB();
+// }
 
 //----- funções para os leds -----//
 void robo_hardware::ligarLed(const int led)const{
-	switch(led){
-		case 1:
-			led1.ligar();
-		break;
-		case 2:
-			led2.ligar();
-		break;
-		default:
-		break;	
-	}
+	digitalWrite( led, HIGH);
 }
 
 void robo_hardware::desligarLed(const int led)const{
-	switch(led){
-		case 1:
-			led1.desligar();
-		break;
-		case 2:
-			led2.desligar();
-		break;
-		default:
-		break;	
-	}
+	digitalWrite( led, LOW);
 }
 
 void robo_hardware::ligarTodosLeds()const{
-	led1.ligar();
-	led2.ligar();
+	ligarLedSmdVerde();
+	ligarLedSmdVermelho();
+	ligarLedAmarelo(); 
+	ligarLedAzul();     
+	ligarLedVermelho();
+	ligarLedVerde();
 }
 
 void robo_hardware::desligarTodosLeds()const{
-	led1.desligar();
-	led2.desligar();
+	desligarLedSmdVerde();
+	desligarLedSmdVermelho();
+	desligarLedAmarelo(); 
+	desligarLedAzul();     
+	desligarLedVermelho();
+	desligarLedVerde();
 }

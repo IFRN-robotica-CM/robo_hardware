@@ -7,31 +7,31 @@
 #include "cor.h"
 #include "pinagem.h"
 #include "Ultrasonic.h"
-#include "CorTcs34.h"
-#include "led_botoes/Led.h"
+//#include "CorTcs34.h"
+//#include "led_botoes/Led.h"
 
-enum{
-	TCS23,
-	TCS34
-};
+// enum{
+// 	TCS23,
+// 	TCS34
+// };
 
-struct calibracao_dados{
-	HSV brancoDir;
-	HSV brancoEsq;
-	HSV pretoDir;
-	HSV pretoEsq;
-	HSV verdeDir;
-	HSV verdeEsq;
-	HSV cinzaDir;
-	HSV cinzaEsq;
+// struct calibracao_dados{
+// 	HSV brancoDir;
+// 	HSV brancoEsq;
+// 	HSV pretoDir;
+// 	HSV pretoEsq;
+// 	HSV verdeDir;
+// 	HSV verdeEsq;
+// 	HSV cinzaDir;
+// 	HSV cinzaEsq;
 
-	int refletanciaDir;
-	int refletanciaMaisDir;
-	int refletanciaEsq;
-	int refletanciaMaisEsq;
+// 	int refletanciaDir;
+// 	int refletanciaMaisDir;
+// 	int refletanciaEsq;
+// 	int refletanciaMaisEsq;
 	
 
-};
+// };
 
 struct refletancia_dados{
 	float valorLedLigado;
@@ -80,16 +80,33 @@ public:
 	float lerSensorSonarFrontal();
   
 	//funcoes para trabalhar com os sensores de Cor
-  	HSV getHSVEsquerdo(); //realiza a leitura do sensor de cor esquerdo e retorna uma estrutura HSV. Ver cor.h
-  	RGB getRGBEsquerdo(); //realiza a leitura do sensor de cor esquerdo e retorna uma estrutura RGB. Ver cor.h
-  	HSV getHSVDireito(); 	//realiza a leitura do sensor de cor direito e retorna uma estrutura HSV. Ver cor.h
- 	RGB getRGBDireito(); 	//realiza a leitura do sensor de cor direito e retorna uma estrutura RGB. Ver cor.h
+  	// HSV getHSVEsquerdo(); //realiza a leitura do sensor de cor esquerdo e retorna uma estrutura HSV. Ver cor.h
+  	// RGB getRGBEsquerdo(); //realiza a leitura do sensor de cor esquerdo e retorna uma estrutura RGB. Ver cor.h
+  	// HSV getHSVDireito(); 	//realiza a leitura do sensor de cor direito e retorna uma estrutura HSV. Ver cor.h
+ 	// RGB getRGBDireito(); 	//realiza a leitura do sensor de cor direito e retorna uma estrutura RGB. Ver cor.h
 
-	void salvarCalibracao(calibracao_dados cal);  
-	void lerCalibracao(calibracao_dados &cal);
+	// void salvarCalibracao(calibracao_dados cal);  
+	// void lerCalibracao(calibracao_dados &cal);
 
 	void ligarLed(const int led)const;
 	void desligarLed(const int led)const;
+
+    inline void ligarLedSmdVerde()    {ligarLed(LED_SMD_VERDE);}const;
+    inline void ligarLedSmdVermelho() {ligarLed(LED_SMD_VERMELHO);}const;
+
+	inline void desligarLedSmdVerde()    {desligarLed(LED_SMD_VERDE);}const;
+    inline void desligarLedSmdVermelho() {desligarLed(LED_SMD_VERMELHO);}const;
+
+    inline void ligarLedAmarelo()  {ligarLed(LED_AMARELO);}const;
+	inline void ligarLedAzul()     {ligarLed(LED_AZUL);}const;
+ 	inline void ligarLedVermelho() {ligarLed(LED_VERMELHO);}const;
+	inline void ligarLedVerde()    {ligarLed(LED_VERDE);}const;
+
+	inline void desligarLedAmarelo()  {desligarLed(LED_AMARELO);}const;
+	inline void desligarLedAzul()     {desligarLed(LED_AZUL);}const;
+ 	inline void desligarLedVermelho() {desligarLed(LED_VERMELHO);}const;
+	inline void desligarLedVerde()    {desligarLed(LED_VERDE);}const;
+
 	void ligarTodosLeds()const;
 	void desligarTodosLeds()const;
 
@@ -99,13 +116,11 @@ private:
 
   	void tensao(float valor_por_cento,int pino);
 
-  	CorTcs34 corDireita34;
-  	CorTcs34 corEsquerda34;
+  	// CorTcs34 corDireita34;
+  	// CorTcs34 corEsquerda34;
 
 
 	Ultrasonic sonarFrontal;
-	
-	Led	led1, led2;
 };
 
 static robo_hardware robo;
