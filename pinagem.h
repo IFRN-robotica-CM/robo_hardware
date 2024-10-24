@@ -29,11 +29,11 @@ Arduino MEGA pinout
   20 - SDA (I²C)
   21 - SCL (I²C)
   22 - Digital
-  23 - Digital
+  23 - Digital   LED_SMD_VERDE
   24 - Digital
-  25 - Digital
+  25 - Digital   LED_AMARELO
   26 - Digital
-  27 - Digital
+  27 - Digital   LED_SMD_VERMELHO
   28 - Digital
   29 - Digital
   30 - Digital
@@ -41,7 +41,7 @@ Arduino MEGA pinout
   32 - Digital
   33 - Digital
   34 - Digital
-  35 - Digital
+  35 - Digital   LED_AZUL
   36 - Digital
   37 - Digital
   38 - Digital
@@ -51,7 +51,7 @@ Arduino MEGA pinout
   42 - Digital
   43 - Digital
   44 - Digital (PWM)
-  45 - Digital (PWM)
+  45 - Digital (PWM)   LED_VERMELHO
   46 - Digital (PWM)
   47 - Digital
   48 - Digital
@@ -59,7 +59,7 @@ Arduino MEGA pinout
   50 - MISO (SPI)
   51 - MOSI (SPI)
   52 - SCK (SPI)
-  53 - SS (SPI)
+  53 - SS (SPI)   LED_VERDE
 
   A0  - Analógico   SENSOR_LINHA_MAIS_DIREITO
   A1  - Analógico 	LED_SENSOR_LINHA_MAIS_DIREITO
@@ -82,19 +82,19 @@ Arduino MEGA pinout
 
 
 class pinagem{
-	#define PWM_RODA_ESQUERDA 		5		    //Define o pino que ligara o motor esquerdo para mudar a velocidade de rotacao
+	#define PWM_RODA_ESQUERDA 		  5		    //Define o pino que ligara o motor esquerdo para mudar a velocidade de rotacao
 	#define SENTIDO_RODA_ESQUERDA   4		    //Define o pino que ligara o motor esquerdo para mudar o sentido de rotacao
-	#define PWM_RODA_DIREITA 	    6	        //Define o pino que ligara o motor direito para mudar a velocidade de rotacao
-	#define SENTIDO_RODA_DIREITA 	7		    //Define o pino que ligara o motor direito para mudar o sentido de rotacao
+	#define PWM_RODA_DIREITA 	      6	       //Define o pino que ligara o motor direito para mudar a velocidade de rotacao
+	#define SENTIDO_RODA_DIREITA 	  7		    //Define o pino que ligara o motor direito para mudar o sentido de rotacao
 
-	#define SENSOR_LINHA_MAIS_ESQUERDO	A6	    //Define o pino do sensor de refletancia mais esquerdo
-	#define SENSOR_LINHA_ESQUERDO	    A4	    //Define o pino do sensor de refletancia esquerdo
-	#define SENSOR_LINHA_DIREITO	    A2	    //Define o pino do sensor de refletancia direito
-	#define SENSOR_LINHA_MAIS_DIREITO	A0	    //Define o pino do sensor de refletancia mais direito
+	#define SENSOR_LINHA_MAIS_ESQUERDO	A4	    //Define o pino do sensor de refletancia mais esquerdo
+	#define SENSOR_LINHA_ESQUERDO	      A7	    //Define o pino do sensor de refletancia esquerdo
+	#define SENSOR_LINHA_DIREITO	      A3	    //Define o pino do sensor de refletancia direito
+	#define SENSOR_LINHA_MAIS_DIREITO	  A0	    //Define o pino do sensor de refletancia mais direito
 
-	#define LED_SENSOR_LINHA_MAIS_ESQUERDO A7    //Define o pino para ligar o sensor de refletancia mais esquerdo
-	#define LED_SENSOR_LINHA_ESQUERDO      A5   //Define o pino para ligar o sensor de refletancia esquerdo
-	#define LED_SENSOR_LINHA_DIREITO       A3   //Define o pino para ligar o sensor de refletancia direito
+	#define LED_SENSOR_LINHA_MAIS_ESQUERDO A5   //Define o pino para ligar o sensor de refletancia mais esquerdo
+	#define LED_SENSOR_LINHA_ESQUERDO      A6   //Define o pino para ligar o sensor de refletancia esquerdo
+	#define LED_SENSOR_LINHA_DIREITO       A2   //Define o pino para ligar o sensor de refletancia direito
 	#define LED_SENSOR_LINHA_MAIS_DIREITO  A1   //Define o pino para ligar o sensor de refletancia mais direito
 
 	#define SENSOR_COR_DIR_TCS34	3          //Define o pino para ligar o sensor de cor direito
