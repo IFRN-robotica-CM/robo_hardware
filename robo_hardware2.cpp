@@ -4,11 +4,7 @@
 int robo_hardware::tipoSensorCor;
 
 //----- construtor -----//
-robo_hardware::robo_hardware():	//corDireita34(SENSOR_COR_DIR_TCS34),
-							    //corEsquerda34(SENSOR_COR_ESQ_TCS34),
-								sonarFrontal(SONAR_TRIGGER_FRONTAL, SONAR_ECHO_FRONTAL)
-{
-	//tipoSensorCor = TCS34;
+robo_hardware::robo_hardware():sonarFrontal(SONAR_TRIGGER_FRONTAL, SONAR_ECHO_FRONTAL){
 }
 
 //----- funções de controle dos motores -----//
@@ -79,8 +75,26 @@ void robo_hardware::configurar(){
 	pinMode(LED_VERMELHO, OUTPUT);
 	pinMode(LED_VERDE, OUTPUT);
 
-	// corDireita34.config();
-	// corEsquerda34.config();
+	//Configura o sensor de cor
+	Serial.begin(9600);
+  	if (tcsD.begin() && tcsE.begin() ) {
+     	tcsD.enable();
+		tcsE.enable();
+		ligarLedSmdVerde();
+		delay(500);
+		desligarLedSmdVerde();
+  	}
+  	else{
+    	ligarLedSmdVermelho();
+		delay(500);
+		desligarLedSmdVermelho();
+     }
+
+  	pinMode(LED_SENSOR_COR_DIREITO,  OUTPUT);
+  	pinMode(LED_SENSOR_COR_ESQUERDO, OUTPUT);
+
+  	digitalWrite(LED_SENSOR_COR_DIREITO,  LOW);
+  	digitalWrite(LED_SENSOR_COR_ESQUERDO, LOW);
 }
 
 //----- função para ler o sensor de linha com ruido -----//
@@ -159,21 +173,33 @@ float robo_hardware::lerSensorSonarFrontal(){
 }
 
 //----- funções para sensor de cor -----//
-// HSV robo_hardware::getHSVEsquerdo(){
-//   return corEsquerda34.getHSV();
-// }
+RGBC robo_hardware::getRGBSensorDireito() const{
+	int red, green, blue, c;
 
-// HSV robo_hardware::getHSVDireito(){
-//   return corDireita34.getHSV();
-// }
+	//liga o led do sensor
+	digitalWrite(LED_SENSOR_COR_DIREITO, HIGH);
+  	delay(60);
 
-// RGB robo_hardware::getRGBEsquerdo(){
-//   return corEsquerda34.getRGB();
-// }
+    tcsD.getRawData(&red, &green, &blue, &c);
 
-// RGB robo_hardware::getRGBDireito(){
-//       return corDireita34.getRGB();
-// }
+	//liga o led do sensor
+    digitalWrite(LED_SENSOR_COR_DIREITO, LOW);
+	return {red, green, blue, c};
+}
+
+RGBC robo_hardware::getRGBSensorEsquerdo() const{
+	int red, green, blue, c;
+
+	//liga o led do sensor
+	digitalWrite(LED_SENSOR_COR_ESQUERDO, HIGH);
+  	delay(60);
+
+    tcsE.getRawData(&red, &green, &blue, &c);
+
+	//liga o led do sensor
+    digitalWrite(LED_SENSOR_COR_ESQUERDO, LOW);
+	return {red, green, blue, c};
+}
 
 //----- funções para os leds -----//
 void robo_hardware::ligarLed(const int led)const{

@@ -82,10 +82,10 @@ Arduino MEGA pinout
 
 
 class pinagem{
-	#define PWM_RODA_ESQUERDA 		  5		    //Define o pino que ligara o motor esquerdo para mudar a velocidade de rotacao
-	#define SENTIDO_RODA_ESQUERDA   4		    //Define o pino que ligara o motor esquerdo para mudar o sentido de rotacao
-	#define PWM_RODA_DIREITA 	      6	       //Define o pino que ligara o motor direito para mudar a velocidade de rotacao
-	#define SENTIDO_RODA_DIREITA 	  7		    //Define o pino que ligara o motor direito para mudar o sentido de rotacao
+	#define PWM_RODA_ESQUERDA 		  5		        //Define o pino que ligara o motor esquerdo para mudar a velocidade de rotacao
+	#define SENTIDO_RODA_ESQUERDA   4		        //Define o pino que ligara o motor esquerdo para mudar o sentido de rotacao
+	#define PWM_RODA_DIREITA 	      6	          //Define o pino que ligara o motor direito para mudar a velocidade de rotacao
+	#define SENTIDO_RODA_DIREITA 	  7		        //Define o pino que ligara o motor direito para mudar o sentido de rotacao
 
 	#define SENSOR_LINHA_MAIS_ESQUERDO	A4	    //Define o pino do sensor de refletancia mais esquerdo
 	#define SENSOR_LINHA_ESQUERDO	      A7	    //Define o pino do sensor de refletancia esquerdo
@@ -97,14 +97,16 @@ class pinagem{
 	#define LED_SENSOR_LINHA_DIREITO       A2   //Define o pino para ligar o sensor de refletancia direito
 	#define LED_SENSOR_LINHA_MAIS_DIREITO  A1   //Define o pino para ligar o sensor de refletancia mais direito
 
-	#define SENSOR_COR_DIR_TCS34	3          //Define o pino para ligar o sensor de cor direito
-	#define SENSOR_COR_ESQ_TCS34	2          //Define o pino para ligar o sensor de cor esquerdo
+  #define SDA_SENSOR_COR_DIREITO  42
+  #define SCL_SENSOR_COR_DIREITO  40
+  #define LED_SENSOR_COR_DIREITO  38
 
-	#define SONAR_TRIGGER_FRONTAL	12           //Define o pino tigger do sensor sonar
-	#define SONAR_ECHO_FRONTAL		13          //Define o pino echo do sensor sonar
+  #define SDA_SENSOR_COR_ESQUERDO  32
+  #define SCL_SENSOR_COR_ESQUERDO  34
+  #define LED_SENSOR_COR_ESQUERDO  36
 
-	#define LED_1		1                       //Define o pino do led 1 da placa
-	#define LED_2		0                       //Define o pino do led 2 da placa
+	#define SONAR_TRIGGER_FRONTAL	12            //Define o pino tigger do sensor sonar
+	#define SONAR_ECHO_FRONTAL		13            //Define o pino echo do sensor sonar
 	
 	#define LED_SMD_VERDE      23
 	#define LED_SMD_VERMELHO   27
