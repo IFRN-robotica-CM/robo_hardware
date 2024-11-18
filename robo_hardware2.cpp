@@ -124,7 +124,9 @@ const float robo_hardware::lerSensorDeLinha(const int sensor, bool ledLigado=tru
 	delay(1);
 	
 	val = ( 100 - 100.0 * ( analogRead(sensor) )/1023.0);
-	
+
+	digitalWrite(pino, LOW);
+
 	return val;
 }
 
@@ -132,38 +134,18 @@ const float robo_hardware::lerSensorDeLinha(const int sensor, bool ledLigado=tru
 const float robo_hardware::lerDadosSensorDeLinha(const int sensor){
 	float valorLedDesligado = 0;
 	float valorLedLigado    = 0;
-    int pino;
 
-	switch(sensor){
-		case SENSOR_LINHA_MAIS_ESQUERDO:
-			pino = LED_SENSOR_LINHA_MAIS_ESQUERDO;
-		break;
-			
-		case SENSOR_LINHA_ESQUERDO:
-			pino = LED_SENSOR_LINHA_ESQUERDO;
-		break;
+	valorLedDesligado = lerSensorDeLinha(sensor, LOW);
+	delay(100);
+	valorLedLigado    = lerSensorDeLinha(sensor);
 
-		case SENSOR_LINHA_DIREITO:
-			pino = LED_SENSOR_LINHA_DIREITO;
-		break;
-
-		case SENSOR_LINHA_MAIS_DIREITO:
-			pino = LED_SENSOR_LINHA_MAIS_DIREITO;
-		break;
+	if((valorLedLigado -  valorLedDesligado) < 1){
+		return valorLedDesligado;
 	}
-
-	digitalWrite(pino, HIGH);
-
-	delay(10);
+	else{
+		return valorLedLigado -  valorLedDesligado;
+	}
 	
-	valorLedLigado = analogRead(sensor);
-	
-	digitalWrite(pino, LOW);
-	delay(10);
-
-	valorLedDesligado = analogRead(sensor);
-
-	return ( 100 - 100.0 * (valorLedLigado - valorLedDesligado)/1023.0);
 }
 
 //----- função para ler o sensor sonar -----//
@@ -178,9 +160,16 @@ RGBC robo_hardware::getRGBSensorDireito() const{
 
 	//liga o led do sensor
 	digitalWrite(LED_SENSOR_COR_DIREITO, HIGH);
-  	delay(60);
+  	delay(70);
 
-    tcsD.getRawData(&red, &green, &blue, &c);
+	for (int i = 1; i<=10; i++ ){
+		tcsD.getRawData(&red, &green, &blue, &c);
+		s
+	}
+
+	
+
+    
 
 	//liga o led do sensor
     digitalWrite(LED_SENSOR_COR_DIREITO, LOW);
@@ -192,7 +181,7 @@ RGBC robo_hardware::getRGBSensorEsquerdo() const{
 
 	//liga o led do sensor
 	digitalWrite(LED_SENSOR_COR_ESQUERDO, HIGH);
-  	delay(60);
+  	delay(70);
 
     tcsE.getRawData(&red, &green, &blue, &c);
 
