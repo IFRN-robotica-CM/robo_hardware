@@ -77,7 +77,7 @@ void robo_hardware::configurar(){
 
 	//Configura o sensor de cor
 	Serial.begin(9600);
-  	if (tcsD.begin() && tcsE.begin() ) {
+  	if (tcsE.begin() && tcsE.begin() ) {
      	tcsD.enable();
 		tcsE.enable();
 		ligarLedSmdVerde();
@@ -93,8 +93,8 @@ void robo_hardware::configurar(){
   	pinMode(LED_SENSOR_COR_DIREITO,  OUTPUT);
   	pinMode(LED_SENSOR_COR_ESQUERDO, OUTPUT);
 
-  	digitalWrite(LED_SENSOR_COR_DIREITO,  LOW);
-  	digitalWrite(LED_SENSOR_COR_ESQUERDO, LOW);
+  	digitalWrite(LED_SENSOR_COR_DIREITO,  HIGH);
+  	digitalWrite(LED_SENSOR_COR_ESQUERDO, HIGH);
 }
 
 //----- função para ler o sensor de linha com ruido -----//
@@ -156,38 +156,15 @@ float robo_hardware::lerSensorSonarFrontal(){
 
 //----- funções para sensor de cor -----//
 RGBC robo_hardware::getRGBSensorDireito() const{
-	int red, green, blue, c;
-
-	//liga o led do sensor
-	digitalWrite(LED_SENSOR_COR_DIREITO, HIGH);
-  	delay(70);
-
-	for (int i = 1; i<=10; i++ ){
-		tcsD.getRawData(&red, &green, &blue, &c);
-		s
-	}
-
-	
-
-    
-
-	//liga o led do sensor
-    digitalWrite(LED_SENSOR_COR_DIREITO, LOW);
-	return {red, green, blue, c};
+	int red, green, blue, clear;
+	tcsD.getRawData(&red, &green, &blue, &clear);
+	return {red, green, blue, clear};
 }
 
 RGBC robo_hardware::getRGBSensorEsquerdo() const{
-	int red, green, blue, c;
-
-	//liga o led do sensor
-	digitalWrite(LED_SENSOR_COR_ESQUERDO, HIGH);
-  	delay(70);
-
-    tcsE.getRawData(&red, &green, &blue, &c);
-
-	//liga o led do sensor
-    digitalWrite(LED_SENSOR_COR_ESQUERDO, LOW);
-	return {red, green, blue, c};
+	int red, green, blue, clear;
+	tcsE.getRawData(&red, &green, &blue, &clear);
+	return {red, green, blue, clear};
 }
 
 //----- funções para os leds -----//
