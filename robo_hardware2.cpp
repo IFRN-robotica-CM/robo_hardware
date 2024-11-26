@@ -95,6 +95,12 @@ void robo_hardware::configurar(){
 
   	digitalWrite(LED_SENSOR_COR_DIREITO,  HIGH);
   	digitalWrite(LED_SENSOR_COR_ESQUERDO, HIGH);
+
+	//configura sensor frontal de distância a laiser
+	if (!lox.begin()) {
+    Serial.println(F("Failed"));
+	}
+	lox.startRangeContinuous();
 }
 
 //----- função para ler o sensor de linha com ruido -----//
@@ -165,6 +171,15 @@ RGBC robo_hardware::getRGBSensorEsquerdo() const{
 	int red, green, blue, clear;
 	tcsE.getRawData(&red, &green, &blue, &clear);
 	return {red, green, blue, clear};
+}
+
+//----- funções para sensor Laiser-----//
+int robo_hardware::lerSensorLaiserFrontal(){
+	if (lox.isRangeComplete()) {
+    	 valorLaiser = lox.readRange();
+  	}
+
+	return valorLaiser;
 }
 
 //----- funções para os leds -----//

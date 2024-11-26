@@ -7,6 +7,7 @@
 #include "pinagem.h"
 #include "Ultrasonic.h"
 #include "Adafruit_TCS34725softi2c.h"
+#include <Adafruit_VL53L0X.h>
 
 struct refletancia_dados{
 	float valorLedLigado;
@@ -58,6 +59,9 @@ public:
 
 	//A função retorna o valor lido do sensor sonar
 	float lerSensorSonarFrontal();
+
+	// A função que retorna valor do sensor Laiser
+	int lerSensorLaiserFrontal();
   
 	//funcoes para trabalhar com os sensores de Cor
 	RGBC getRGBSensorDireito() const;
@@ -87,6 +91,7 @@ public:
 	void desligarTodosLeds()const;
 
 private:
+	int valorLaiser;
 
   	static int tipoSensorCor;
 
@@ -94,9 +99,11 @@ private:
 
 
 	Ultrasonic sonarFrontal;
+
 	Adafruit_TCS34725softi2c tcsE = Adafruit_TCS34725softi2c(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_ESQUERDO, SCL_SENSOR_COR_ESQUERDO);
 	Adafruit_TCS34725softi2c tcsD = Adafruit_TCS34725softi2c(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_DIREITO,   SCL_SENSOR_COR_DIREITO);
 
+	Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 };
 
 static robo_hardware robo;
