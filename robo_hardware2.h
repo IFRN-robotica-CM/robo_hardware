@@ -61,7 +61,7 @@ public:
 	float lerSensorSonarFrontal();
 
 	// A função que retorna valor do sensor Laiser
-	int lerSensorLaiserFrontal();
+	int lerSensorLaiserFrontal()const;
   
 	//funcoes para trabalhar com os sensores de Cor
 	RGBC getRGBSensorDireito() const;
@@ -91,8 +91,6 @@ public:
 	void desligarTodosLeds()const;
 
 private:
-	int valorLaiser;
-
   	static int tipoSensorCor;
 
   	void tensao(float valor_por_cento,int pino);
@@ -100,10 +98,11 @@ private:
 
 	Ultrasonic sonarFrontal;
 
-	Adafruit_TCS34725softi2c tcsE = Adafruit_TCS34725softi2c(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_ESQUERDO, SCL_SENSOR_COR_ESQUERDO);
-	Adafruit_TCS34725softi2c tcsD = Adafruit_TCS34725softi2c(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_DIREITO,   SCL_SENSOR_COR_DIREITO);
+	Adafruit_TCS34725softi2c tcsE;// = Adafruit_TCS34725softi2c(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_ESQUERDO, SCL_SENSOR_COR_ESQUERDO);
+	Adafruit_TCS34725softi2c tcsD;// = Adafruit_TCS34725softi2c(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_DIREITO,   SCL_SENSOR_COR_DIREITO);
 
-	Adafruit_VL53L0X lox = Adafruit_VL53L0X();
+	static Adafruit_VL53L0X lox;// = Adafruit_VL53L0X();
+
 };
 
 static robo_hardware robo;
