@@ -87,16 +87,20 @@ class pinagem{
 	#define PWM_RODA_DIREITA 	      6	          //Define o pino que ligara o motor direito para mudar a velocidade de rotacao
 	#define SENTIDO_RODA_DIREITA 	  7		        //Define o pino que ligara o motor direito para mudar o sentido de rotacao
 
-	#define SENSOR_LINHA_MAIS_ESQUERDO	A4	    //Define o pino do sensor de refletancia mais esquerdo
-	#define SENSOR_LINHA_ESQUERDO	      A7	    //Define o pino do sensor de refletancia esquerdo
+  #define SENSOR_LINHA_FRONTAL        A4      //Define o pino do sensor de refletancia frontal
+  #define SENSOR_LINHA_CENTRAL        A7      //Define o pino do sensor de refletancia central
+	#define SENSOR_LINHA_MAIS_ESQUERDO	A8	    //Define o pino do sensor de refletancia mais esquerdo
+	#define SENSOR_LINHA_ESQUERDO	      A11	    //Define o pino do sensor de refletancia esquerdo
 	#define SENSOR_LINHA_DIREITO	      A3	    //Define o pino do sensor de refletancia direito
 	#define SENSOR_LINHA_MAIS_DIREITO	  A0	    //Define o pino do sensor de refletancia mais direito
-
-	#define LED_SENSOR_LINHA_MAIS_ESQUERDO A5   //Define o pino para ligar o sensor de refletancia mais esquerdo
-	#define LED_SENSOR_LINHA_ESQUERDO      A6   //Define o pino para ligar o sensor de refletancia esquerdo
+  
+  #define LED_SENSOR_LINHA_FRONTAL       A5   //Define o pino para ligar o sensor de refletancia frontal
+  #define LED_SENSOR_LINHA_CENTRAL       A6   //Define o pino para ligar o sensor de refletancia central
+	#define LED_SENSOR_LINHA_MAIS_ESQUERDO A9   //Define o pino para ligar o sensor de refletancia mais esquerdo
+	#define LED_SENSOR_LINHA_ESQUERDO      A10  //Define o pino para ligar o sensor de refletancia esquerdo
 	#define LED_SENSOR_LINHA_DIREITO       A2   //Define o pino para ligar o sensor de refletancia direito
 	#define LED_SENSOR_LINHA_MAIS_DIREITO  A1   //Define o pino para ligar o sensor de refletancia mais direito
-
+                                              
   #define SDA_SENSOR_COR_DIREITO  42
   #define SCL_SENSOR_COR_DIREITO  40
   #define LED_SENSOR_COR_DIREITO  38

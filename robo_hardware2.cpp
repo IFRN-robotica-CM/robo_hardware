@@ -63,12 +63,16 @@ void robo_hardware::configurar(){
 	pinMode(LED_SENSOR_LINHA_ESQUERDO, OUTPUT);
 	pinMode(LED_SENSOR_LINHA_DIREITO, OUTPUT);
 	pinMode(LED_SENSOR_LINHA_MAIS_DIREITO, OUTPUT);
+	pinMode(LED_SENSOR_LINHA_CENTRAL, OUTPUT);
+	pinMode(LED_SENSOR_LINHA_FRONTAL, OUTPUT);
 
 	//Configura pinos para ligar o sensor de linha
 	pinMode(SENSOR_LINHA_MAIS_ESQUERDO, INPUT);
 	pinMode(SENSOR_LINHA_ESQUERDO, INPUT);
 	pinMode(SENSOR_LINHA_DIREITO, INPUT);
 	pinMode(SENSOR_LINHA_MAIS_DIREITO, INPUT);
+	pinMode(SENSOR_LINHA_CENTRAL, INPUT);
+	pinMode(SENSOR_LINHA_FRONTAL, INPUT);
 
 	//Configura pinos para ligar os LEDS
 	pinMode(LED_SMD_VERDE, OUTPUT);
@@ -126,6 +130,14 @@ const float robo_hardware::lerSensorDeLinha(const int sensor, bool ledLigado=tru
 
 		case SENSOR_LINHA_MAIS_DIREITO:
 			pino = LED_SENSOR_LINHA_MAIS_DIREITO;
+		break;
+
+		case SENSOR_LINHA_CENTRAL:
+			pino = LED_SENSOR_LINHA_CENTRAL;
+		break;
+
+		case SENSOR_LINHA_FRONTAL:
+			pino = LED_SENSOR_LINHA_FRONTAL;
 		break;
 	}
 

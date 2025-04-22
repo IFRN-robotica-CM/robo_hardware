@@ -48,6 +48,8 @@ public:
 	inline const float lerSensorLinhaMaisEsq(){	    return lerSensorDeLinha(SENSOR_LINHA_MAIS_ESQUERDO);} //retorna um valor de 0 a 100 
 	inline const float lerSensorLinhaDir(){			return lerSensorDeLinha(SENSOR_LINHA_DIREITO);}       //retorna um valor de 0 a 100
 	inline const float lerSensorLinhaMaisDir(){	    return lerSensorDeLinha(SENSOR_LINHA_MAIS_DIREITO);}  //retorna um valor de 0 a 100
+	inline const float lerSensorLinhaCentral(){	    return lerSensorDeLinha(SENSOR_LINHA_CENTRAL);}       //retorna um valor de 0 a 100
+	inline const float lerSensorLinhaFrontal(){	    return lerSensorDeLinha(SENSOR_LINHA_FRONTAL);}       //retorna um valor de 0 a 100
 
 	const float lerDadosSensorDeLinha(const int sensor);
 
@@ -55,7 +57,8 @@ public:
 	inline const float lerSensorLinhaMaisEsqSemRuido(){     return lerDadosSensorDeLinha(SENSOR_LINHA_MAIS_ESQUERDO);} //retorna um valor de 0 a 100 
 	inline const float lerSensorLinhaDirSemRuido(){			return lerDadosSensorDeLinha(SENSOR_LINHA_DIREITO);}       //retorna um valor de 0 a 100
 	inline const float lerSensorLinhaMaisDirSemRuido(){	    return lerDadosSensorDeLinha(SENSOR_LINHA_MAIS_DIREITO);}  //retorna um valor de 0 a 100
-
+	inline const float lerSensorLinhaCentralSemRuido(){	    return lerDadosSensorDeLinha(SENSOR_LINHA_CENTRAL);}       //retorna um valor de 0 a 100
+	inline const float lerSensorLinhaFrontalSemRuido(){	    return lerDadosSensorDeLinha(SENSOR_LINHA_FRONTAL);}       //retorna um valor de 0 a 100
 
 	//A função retorna o valor lido do sensor sonar
 	float lerSensorSonarFrontal();
