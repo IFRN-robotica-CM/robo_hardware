@@ -22,7 +22,7 @@ RGBC leituraSensorCorEsq;
 }
 
 void loop(){
-  leituraSensorCorDir = robo.getRGBSensorDireito(); //FUNCAO PARA LER VALOR DO SENSOR DE COR ESQUERDO
+  leituraSensorCorDir = robo.lerSensorDeCorDir(); //FUNCAO PARA LER VALOR DO SENSOR DE COR DIREITO
 
   //imprime os 3 valores retornardos pelo sensor cor
   Serial.print("Valor do sensor de cor DIR: ");
@@ -36,7 +36,7 @@ void loop(){
   
   Serial.println();
   
-  leituraSensorCorEsq = robo.getRGBSensorEsquerdo(); //FUNCAO PARA LER VALOR DO SENSOR DE COR ESQUERDO
+  leituraSensorCorEsq = robo.lerSensorDeCorEsq(); //FUNCAO PARA LER VALOR DO SENSOR DE COR ESQUERDO
 
   //imprime os 3 valores retornardos pelo sensor cor
   Serial.print("Valor do sensor de cor ESQ: ");

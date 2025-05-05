@@ -67,7 +67,15 @@ public:
 	int lerSensorLaiserFrontal()const;
   
 	//funcoes para trabalhar com os sensores de Cor
-	RGBC getRGBSensor() const;
+	RGBC getRGBSensorDir() const;
+    RGBC getRGBSensorEsq() const;
+
+	void canal00() const;
+	void canal01() const;
+	void canal10() const;
+
+	RGBC lerSensorDeCorDir();
+	RGBC lerSensorDeCorEsq();
 
   	//funcoes para o controle dos leds
 	void ligarLed(const int led)const;
@@ -100,8 +108,8 @@ private:
 
 	Ultrasonic sonarFrontal;
 
-	Adafruit_TCS34725 tcs;// = Adafruit_TCS34725softi2c(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_ESQUERDO, SCL_SENSOR_COR_ESQUERDO);
-
+	Adafruit_TCS34725 tcsD;// = Adafruit_TCS34725softi2c(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_ESQUERDO, SCL_SENSOR_COR_ESQUERDO);
+	Adafruit_TCS34725 tcsE;
 	static Adafruit_VL53L0X lox;// = Adafruit_VL53L0X();
 
 };

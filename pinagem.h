@@ -101,13 +101,8 @@ class pinagem{
 	#define LED_SENSOR_LINHA_DIREITO       A2   //Define o pino para ligar o sensor de refletancia direito
 	#define LED_SENSOR_LINHA_MAIS_DIREITO  A1   //Define o pino para ligar o sensor de refletancia mais direito
                                               
-  #define SDA_SENSOR_COR_DIREITO  42
-  #define SCL_SENSOR_COR_DIREITO  40
-  #define LED_SENSOR_COR_DIREITO  38
-
-  #define SDA_SENSOR_COR_ESQUERDO  32
-  #define SCL_SENSOR_COR_ESQUERDO  34
-  #define LED_SENSOR_COR_ESQUERDO  36
+  #define  SEL_A  30
+  #define  SEL_B  28
 
 	#define SONAR_TRIGGER_FRONTAL	12            //Define o pino tigger do sensor sonar
 	#define SONAR_ECHO_FRONTAL		13            //Define o pino echo do sensor sonar
