@@ -7,8 +7,7 @@ Adafruit_VL53L0X robo_hardware::lox = Adafruit_VL53L0X();
 //----- construtor -----//
 robo_hardware::robo_hardware():
 	sonarFrontal(SONAR_TRIGGER_FRONTAL, SONAR_ECHO_FRONTAL),
-	tcsE(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_ESQUERDO, SCL_SENSOR_COR_ESQUERDO),
-	tcsD(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_DIREITO,   SCL_SENSOR_COR_DIREITO){
+	tcs(TCS34725_INTEGRATIONTIME_614MS,TCS34725_GAIN_1X){
 }
 
 //----- funções de controle dos motores -----//
@@ -82,27 +81,10 @@ void robo_hardware::configurar(){
 	pinMode(LED_AZUL, OUTPUT);
 	pinMode(LED_VERMELHO, OUTPUT);
 	pinMode(LED_VERDE, OUTPUT);
+
 	//Configura o sensor de cor
-	Serial.begin(9600);
-	Serial.println("passei aqui");
-  	if (tcsE.begin() && tcsE.begin() ) {
-     	tcsD.enable();
-		tcsE.enable();
-		ligarLedSmdVerde();
-		delay(500);
-		desligarLedSmdVerde();
-  	}
-  	else{
-    	ligarLedSmdVermelho();
-		delay(500);
-		desligarLedSmdVermelho();
-    }
-
-  	pinMode(LED_SENSOR_COR_DIREITO,  OUTPUT);
-  	pinMode(LED_SENSOR_COR_ESQUERDO, OUTPUT);
-
-  	digitalWrite(LED_SENSOR_COR_DIREITO,  HIGH);
-  	digitalWrite(LED_SENSOR_COR_ESQUERDO, HIGH);
+	Wire.begin();
+	tcs.begin();
 
 	//configura sensor frontal de distância a laiser
 	if (!lox.begin()) {
@@ -177,18 +159,11 @@ float robo_hardware::lerSensorSonarFrontal(){
 }
 
 //----- funções para sensor de cor -----//
-RGBC robo_hardware::getRGBSensorDireito() const{
+RGBC robo_hardware::getRGBSensor() const{
 	int red, green, blue, clear;
-	tcsD.getRawData(&red, &green, &blue, &clear);
+	tcs.getRawData(&red, &green, &blue, &clear);
 	return {red, green, blue, clear};
 }
-
-RGBC robo_hardware::getRGBSensorEsquerdo() const{
-	int red, green, blue, clear;
-	tcsE.getRawData(&red, &green, &blue, &clear);
-	return {red, green, blue, clear};
-}
-
 //----- funções para sensor Laiser-----//
 int robo_hardware::lerSensorLaiserFrontal() const{
 	int valorLaiser=0;
