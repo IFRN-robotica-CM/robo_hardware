@@ -145,7 +145,7 @@ const float robo_hardware::lerDadosSensorDeLinha(const int sensor){
 	float valorLedLigado    = 0;
 
 	valorLedDesligado = lerSensorDeLinha(sensor, LOW);
-	delay(100);
+	delay(1);
 	valorLedLigado    = lerSensorDeLinha(sensor);
 
 	if((valorLedLigado -  valorLedDesligado) < 1){
