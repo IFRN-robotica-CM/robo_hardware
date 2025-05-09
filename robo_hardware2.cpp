@@ -2,7 +2,7 @@
 #include <math.h>
 
 int robo_hardware::tipoSensorCor;
-Adafruit_VL53L0X robo_hardware::lox = Adafruit_VL53L0X();
+VL53L0X robo_hardware::sensor;
 
 //----- construtor -----//
 robo_hardware::robo_hardware():
@@ -90,12 +90,12 @@ void robo_hardware::configurar(){
 
 	pinMode(SEL_A, OUTPUT);
 	pinMode(SEL_B, OUTPUT);
-
+	
+	digitalWrite(SEL_A, LOW);
+	digitalWrite(SEL_B, HIGH);
 	//configura sensor frontal de distância a laiser
-	if (!lox.begin()) {
-    	Serial.println(F("Failed Laiser"));
-	}
-	lox.startRangeContinuous();
+	sensor.init();
+	sensor.setTimeout(500);
 }
 
 //----- função para ler o sensor de linha com ruido -----//
@@ -206,15 +206,13 @@ RGBC robo_hardware::lerSensorDeCorDir(){
 }
 
 //----- funções para sensor Laiser-----//
-int robo_hardware::lerSensorLaiserFrontal() const{
-	int valorLaiser=0;
+int robo_hardware::lerSensorLaserFrontal() const{
+	canal01();
+	delay(500);
 
-	if (lox.isRangeComplete()) {
-     	 valorLaiser = lox.readRange();
-		// delay(1000);
-  	}
-
-	return valorLaiser;
+	int valDist;
+	valDist =sensor.readRangeSingleMillimeters();
+	return valDist;
 }
 
 //----- funções para os leds -----//

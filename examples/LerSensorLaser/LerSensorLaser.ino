@@ -10,7 +10,7 @@ void setup(){
 }
 
 void loop(){
-   ValorSensorLaizer = robo.lerSensorLaiserFrontal();
+   ValorSensorLaizer = robo.lerSensorLaserFrontal();
    Serial.print("Valor Laise Frontal em mm: ");
    Serial.println(ValorSensorLaizer);
 

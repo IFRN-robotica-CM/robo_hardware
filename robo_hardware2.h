@@ -7,7 +7,7 @@
 #include "pinagem.h"
 #include "Ultrasonic.h"
 #include "Adafruit_TCS34725.h"
-#include <Adafruit_VL53L0X.h>
+#include <VL53L0X.h>
 
 struct refletancia_dados{
 	float valorLedLigado;
@@ -64,7 +64,7 @@ public:
 	float lerSensorSonarFrontal();
 
 	// A função que retorna valor do sensor Laiser
-	int lerSensorLaiserFrontal()const;
+	int lerSensorLaserFrontal()const;
   
 	//funcoes para trabalhar com os sensores de Cor
 	RGBC getRGBSensorDir() const;
@@ -110,7 +110,7 @@ private:
 
 	Adafruit_TCS34725 tcsD;// = Adafruit_TCS34725softi2c(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_ESQUERDO, SCL_SENSOR_COR_ESQUERDO);
 	Adafruit_TCS34725 tcsE;
-	static Adafruit_VL53L0X lox;// = Adafruit_VL53L0X();
+	static VL53L0X sensor;// = Adafruit_VL53L0X();
 
 };
 
