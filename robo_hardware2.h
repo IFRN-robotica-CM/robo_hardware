@@ -3,6 +3,7 @@
 
 
 #include <Arduino.h>
+#include <Servo.h>
 
 #include "pinagem.h"
 #include "Ultrasonic.h"
@@ -110,6 +111,10 @@ private:
 
 	Adafruit_TCS34725 tcsD;// = Adafruit_TCS34725softi2c(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_ESQUERDO, SCL_SENSOR_COR_ESQUERDO);
 	Adafruit_TCS34725 tcsE;
+    
+	Servo servoBraco;
+	Servo servoGarra;
+
 	static VL53L0X sensor;// = Adafruit_VL53L0X();
 
 };

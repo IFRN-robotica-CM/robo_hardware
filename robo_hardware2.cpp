@@ -93,9 +93,17 @@ void robo_hardware::configurar(){
 	
 	digitalWrite(SEL_A, LOW);
 	digitalWrite(SEL_B, HIGH);
+	
 	//configura sensor frontal de distância a laiser
 	sensor.init();
 	sensor.setTimeout(500);
+
+	//configurar o servo do braço
+	servoBraco.attach(SERVO_BRACO); // pino do braço
+  	servoGarra.attach(SERVO_GARRA); // pino da garra
+
+	servoGarra.write(0);  // fecha a garra
+  	servoBraco.write(0);
 }
 
 //----- função para ler o sensor de linha com ruido -----//
@@ -145,15 +153,10 @@ const float robo_hardware::lerDadosSensorDeLinha(const int sensor){
 	float valorLedLigado    = 0;
 
 	valorLedDesligado = lerSensorDeLinha(sensor, LOW);
-	delay(1);
 	valorLedLigado    = lerSensorDeLinha(sensor);
-
-	if((valorLedLigado -  valorLedDesligado) < 1){
-		return valorLedDesligado;
-	}
-	else{
-		return valorLedLigado -  valorLedDesligado;
-	}
+	
+	return valorLedLigado -  valorLedDesligado;
+	
 	
 }
 
@@ -208,7 +211,7 @@ RGBC robo_hardware::lerSensorDeCorDir(){
 //----- funções para sensor Laiser-----//
 int robo_hardware::lerSensorLaserFrontal() const{
 	canal01();
-	delay(500);
+	delay(1);
 
 	int valDist;
 	valDist =sensor.readRangeSingleMillimeters();
