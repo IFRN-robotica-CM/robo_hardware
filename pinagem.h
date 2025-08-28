@@ -114,9 +114,6 @@ class pinagem{
 	#define LED_AZUL           35
 	#define LED_VERMELHO       45
 	#define LED_VERDE          53
-  
-  #define SERVO_BRACO        9            //Define o pino do servo do braço
-  #define SERVO_GARRA       11            //Define o pino do servo da
 };
 
 #endif

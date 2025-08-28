@@ -1,246 +1,220 @@
-#include "robo_hardware2.h"
-#include <math.h>
+#include "../include/Estrategia.h"
 
-int robo_hardware::tipoSensorCor;
-VL53L0X robo_hardware::sensor;
-
-//----- construtor -----//
-robo_hardware::robo_hardware():
-	sonarFrontal(SONAR_TRIGGER_FRONTAL, SONAR_ECHO_FRONTAL),
-	tcsD(TCS34725_INTEGRATIONTIME_614MS,TCS34725_GAIN_1X),
-	tcsE(TCS34725_INTEGRATIONTIME_614MS,TCS34725_GAIN_1X){
-}
-
-//----- funções de controle dos motores -----//
-void robo_hardware::tensao(float valor_por_cento,int pino){
-  float k = 255/100.0;
-
-  if(valor_por_cento < -100) 
-    valor_por_cento = -100;	//se o valor passado em valor_por_cento for menor que -100 obriga-se o mmotor a ficar em -100
-  if(valor_por_cento >  100) 
-    valor_por_cento =  100;	//se o valor passado em valor_por_cento for maior que 100 obriga-se o mmotor a ficar em 100
-
-  float valor_ate_255 = valor_por_cento * k;
+void Estrategia::seguirLinha(){
+  //lê sensores de linha
+  refletancia.atualizarSensoresRefletancia();
   
-  analogWrite(pino, abs(valor_ate_255)); 
-}
-
-void robo_hardware::acionarMotores(float motor1, float motor2){
- 
-  if(motor1 < 0){
-    digitalWrite(SENTIDO_RODA_ESQUERDA, false);
-    tensao(motor1,PWM_RODA_ESQUERDA);  
-  }else{
-    digitalWrite(SENTIDO_RODA_ESQUERDA, true);
-    motor1 = 100 - motor1;
-    tensao(motor1,PWM_RODA_ESQUERDA);  
+  if (refletancia.frente()){
+    motores.emFrente();
   }
-  
-  if(motor2 < 0){
-    digitalWrite(SENTIDO_RODA_DIREITA, false);
-    tensao(motor2,PWM_RODA_DIREITA);  
-  }else{
-    digitalWrite(SENTIDO_RODA_DIREITA, true);
-    motor2 = 100 - motor2;
-    tensao(motor2,PWM_RODA_DIREITA);  
+  else if(refletancia.direita()){
+    motores.direita();
   }
-    
+  else if(refletancia.esquerda()){
+    motores.esquerda();
+  }
+  else if(refletancia.bbpp()){
+    if(refletancia.pp() || refletancia.bp()){
+      motores.parar(1000);
+      fazerVerde();
+    }else{
+      motores.direita();
+    }
+  }
+
+  else if(refletancia.ppbb()){
+    if(refletancia.pp() || refletancia.bp()){
+      motores.parar(1000);
+      fazerVerde();
+    }else{
+      motores.esquerda();
+    }
+  }
+  else if(refletancia.pppp()){
+    motores.parar(500);
+    robo.ligarTodosLeds();
+    delay(100);
+    robo.desligarTodosLeds();
+    delay(100);
+    fazerVerde();
+    estadoDeObstaculo = true;
+  }
 }
 
-//----- função de inicialização -----//
-void robo_hardware::configurar(){
-	//Com essas funcoes os sonares sao calibrados 
-	sonarFrontal.setDivisor(CALIBRACAO_SONAR, Ultrasonic::CM);  
+void Estrategia::fazerVerde(){
+  cor.lerSensoresCor();
+  MeuSensorCor::CORES corDir = cor.verificaCorDir();
+  MeuSensorCor::CORES corEsq = cor.verificaCorEsq();
 
-	//Configura pinos da ponte H
-  	pinMode(PWM_RODA_ESQUERDA, OUTPUT); 
-  	pinMode(PWM_RODA_DIREITA, OUTPUT); 
-	pinMode(SENTIDO_RODA_ESQUERDA, OUTPUT); 
-	pinMode(SENTIDO_RODA_DIREITA, OUTPUT);
+  if(corDir == cor.VERDE && corEsq == cor.VERDE){
+    robo.ligarLedVerde();
 
-	//Configura pinos para ligar o sensor de linha
-	pinMode(LED_SENSOR_LINHA_MAIS_ESQUERDO, OUTPUT);
-	pinMode(LED_SENSOR_LINHA_ESQUERDO, OUTPUT);
-	pinMode(LED_SENSOR_LINHA_DIREITO, OUTPUT);
-	pinMode(LED_SENSOR_LINHA_MAIS_DIREITO, OUTPUT);
-	pinMode(LED_SENSOR_LINHA_CENTRAL, OUTPUT);
-	pinMode(LED_SENSOR_LINHA_FRONTAL, OUTPUT);
+    motores.emFrente();
+    delay(300);
+    robo.acionarMotores(80, -80);
+    delay(2200);
+    motores.emFrente();
+    delay(200);
 
-	//Configura pinos para ligar o sensor de linha
-	pinMode(SENSOR_LINHA_MAIS_ESQUERDO, INPUT);
-	pinMode(SENSOR_LINHA_ESQUERDO, INPUT);
-	pinMode(SENSOR_LINHA_DIREITO, INPUT);
-	pinMode(SENSOR_LINHA_MAIS_DIREITO, INPUT);
-	pinMode(SENSOR_LINHA_CENTRAL, INPUT);
-	pinMode(SENSOR_LINHA_FRONTAL, INPUT);
+    robo.desligarLedVerde();
+  }
 
-	//Configura pinos para ligar os LEDS
-	pinMode(LED_SMD_VERDE, OUTPUT);
-	pinMode(LED_SMD_VERMELHO, OUTPUT);
+  else if(!(corDir == cor.VERDE) && corEsq == cor.VERDE){
+    robo.ligarLedAmarelo();
 
-	pinMode(LED_AMARELO, OUTPUT);
-	pinMode(LED_AZUL, OUTPUT);
-	pinMode(LED_VERMELHO, OUTPUT);
-	pinMode(LED_VERDE, OUTPUT);
+    motores.emFrente();
+    delay(100);
+    motores.girar90Esq();
 
-	//Configura o sensor de cor
-	Wire.begin();
-	tcsD.begin();
-	tcsE.begin();
+    robo.desligarLedAmarelo();
+  }
 
-	pinMode(SEL_A, OUTPUT);
-	pinMode(SEL_B, OUTPUT);
-	
-	digitalWrite(SEL_A, LOW);
-	digitalWrite(SEL_B, HIGH);
-	
-	//configura sensor frontal de distância a laiser
-	sensor.init();
-	sensor.setTimeout(500);
+  else if(corDir == cor.VERDE && !(corEsq == cor.VERDE)){
+    robo.ligarLedAzul();
 
-	//configurar o servo do braço
-	servoBraco.attach(SERVO_BRACO); // pino do braço
-  	servoGarra.attach(SERVO_GARRA); // pino da garra
+    motores.emFrente();
+    delay(100);
+    motores.girar90Dir();
 
-	servoGarra.write(0);  // fecha a garra
-  	servoBraco.write(0);
+    robo.desligarLedAzul();
+  }
+  else{
+    motores.emFrente();
+    delay(300);
+  }
 }
 
-//----- função para ler o sensor de linha com ruido -----//
-const float robo_hardware::lerSensorDeLinha(const int sensor, bool ledLigado=true){
-	int pino;
-	float val=0;
-	switch(sensor){
-		case SENSOR_LINHA_MAIS_ESQUERDO:
-			pino = LED_SENSOR_LINHA_MAIS_ESQUERDO;
-		break;
-			
-		case SENSOR_LINHA_ESQUERDO:
-			pino = LED_SENSOR_LINHA_ESQUERDO;
-		break;
+void Estrategia::executar(){
+  dist.atualizarSensorLaiser();
+  refletancia.atualizarSensoresRefletancia();
 
-		case SENSOR_LINHA_DIREITO:
-			pino = LED_SENSOR_LINHA_DIREITO;
-		break;
+  if (dist.identificouObstaculo() && estadoDeObstaculo){
+    desviarObstaculoEsq();
+  }
+  else if (refletancia.IdentificaArea()){
+    motores.emFrente();
+    delay(100);
+    motores.parar(1000);
 
-		case SENSOR_LINHA_MAIS_DIREITO:
-			pino = LED_SENSOR_LINHA_MAIS_DIREITO;
-		break;
+    cor.lerSensoresCor();
+    MeuSensorCor::CORES corDir = cor.verificaCorDir();
+    MeuSensorCor::CORES corEsq = cor.verificaCorEsq();
 
-		case SENSOR_LINHA_CENTRAL:
-			pino = LED_SENSOR_LINHA_CENTRAL;
-		break;
-
-		case SENSOR_LINHA_FRONTAL:
-			pino = LED_SENSOR_LINHA_FRONTAL;
-		break;
-	}
-
-	digitalWrite(pino, ledLigado);
-
-	delay(1);
-	
-	val = ( 100 - 100.0 * ( analogRead(sensor) )/1023.0);
-
-	digitalWrite(pino, LOW);
-
-	return val;
+    if(corDir == cor.CINZA && corEsq == cor.CINZA){
+      robo.ligarTodosLeds();
+      resgatar();
+      robo.desligarTodosLeds();
+    }
+    else{
+      motores.emFrente();
+      delay(100);
+    }
+  }
+  else{
+    seguirLinha();
+  }
 }
 
-//----- função para ler o sensor de linha sem ruido -----//
-const float robo_hardware::lerDadosSensorDeLinha(const int sensor){
-	float valorLedDesligado = 0;
-	float valorLedLigado    = 0;
+void Estrategia::alinhar(){
+  refletancia.atualizarSensoresRefletancia();
+  while(!(refletancia.pppp())){
+    refletancia.atualizarSensoresRefletancia();
+    if(refletancia.desalinhou_direita()){
+      motores.esquerda();
+    }
+    else if(refletancia.desalinhou_esquerda()){
+      motores.direita();
+    }
+    else{
+      motores.paraTras();
+    }
+  }
+  motores.parar(500);
 
-	valorLedDesligado = lerSensorDeLinha(sensor, LOW);
-	valorLedLigado    = lerSensorDeLinha(sensor);
-	
-	return valorLedLigado -  valorLedDesligado;
-	
-	
 }
 
-//----- função para ler o sensor sonar -----//
-float robo_hardware::lerSensorSonarFrontal(){
-	long microsec = sonarFrontal.timing();
-	return sonarFrontal.convert(microsec, Ultrasonic::CM);  //retorna a distância do sensor ao obstáculo em cm.
+void Estrategia::desviarObstaculoEsq(){
+  robo.ligarLedSmdVermelho();
+  motores.parar(500);
+  motores.girar90Esq();
+  alinhar();
+  motores.emFrente();
+  delay(1500);
+  motores.girar90Dir();
+  motores.emFrente();
+  delay(2000);
+  motores.girar90Dir();
+  motores.emFrente();
+  delay(1500);
+  alinhar();
+  motores.emFrente();
+  delay(300);
+  motores.girar90Esq();
+  refletancia.atualizarSensoresRefletancia();
+  while(!(refletancia.bbbb())){
+    refletancia.atualizarSensoresRefletancia();
+    if(refletancia.desalinhou_direita()){
+      motores.direita();
+    }
+    else if(refletancia.desalinhou_esquerda()){
+      motores.esquerda();
+    }
+    else{
+      motores.emFrente();
+    }
+  }
+  robo.desligarLedSmdVermelho();
+  estadoDeObstaculo = false;
 }
 
-//----- funções para sensor de cor -----//
-RGBC robo_hardware::getRGBSensorEsq() const{
-	int red, green, blue, clear;
-	tcsE.getRawData(&red, &green, &blue, &clear);
-	return {red, green, blue, clear};
+void Estrategia::resgatar(){
+  motores.emFrente();
+  delay(250);
+  garra.descerBraco();
+  garra.abrirGarra();
+  motores.emFrente();
+  delay(1000);
+  // motores.parar(5000);
+  garra.fecharGarra();
+  delay(900);
+  garra.levantarBraco();
+  // motores.emFrente();
+  motores.paraTras();
+  delay(1200);
+  motores.girar90Esq();
+  motores.emFrente();
+  delay(2200);
+  motores.direita();
+  delay(450);
+  motores.emFrente();
+  // garra.levantarBraco();
+  delay(1100);
+  motores.parar(1000);
+  garra.medianaBraco();
+  delay(500);
+  garra.abrirGarra();
+  delay(1000);
+  garra.levantarBraco();
+  motores.paraTras();
+  delay(1000);
+  motores.parar(500);
+  motores.esquerda();
+  delay(500);
+  // motores.girar90Esq();
+  garra.descerBraco();
+  garra.abrirGarra();
+  motores.emFrente();
+  delay(500);
+  garra.fecharGarra();
+  garra.levantarBraco();
+  motores.paraTras();
+  delay(500);
+  motores.girar90Dir();
 }
 
-RGBC robo_hardware::getRGBSensorDir() const{
-	int red, green, blue, clear;
-	tcsD.getRawData(&red, &green, &blue, &clear);
-	return {red, green, blue, clear};
-}
-
-void robo_hardware::canal00() const{
-	digitalWrite(SEL_A, LOW);
-	digitalWrite(SEL_B, LOW);
-}
-
-void robo_hardware::canal01() const{
-	digitalWrite(SEL_A, LOW);
-	digitalWrite(SEL_B, HIGH);
-}
-
-void robo_hardware::canal10() const{
-	digitalWrite(SEL_A, HIGH);
-	digitalWrite(SEL_B, LOW);
-}
-
-RGBC robo_hardware::lerSensorDeCorEsq(){
-	canal00();
-	delay(100);
-	return getRGBSensorEsq();
-	delay(100);	
-}
-
-RGBC robo_hardware::lerSensorDeCorDir(){
-	canal10();
-	delay(100);
-	return getRGBSensorDir();
-	delay(100);
-}
-
-//----- funções para sensor Laiser-----//
-int robo_hardware::lerSensorLaserFrontal() const{
-	canal01();
-	delay(1);
-
-	int valDist;
-	valDist =sensor.readRangeSingleMillimeters();
-	return valDist;
-}
-
-//----- funções para os leds -----//
-void robo_hardware::ligarLed(const int led)const{
-	digitalWrite( led, HIGH);
-}
-
-void robo_hardware::desligarLed(const int led)const{
-	digitalWrite( led, LOW);
-}
-
-void robo_hardware::ligarTodosLeds()const{
-	ligarLedSmdVerde();
-	ligarLedSmdVermelho();
-	ligarLedAmarelo(); 
-	ligarLedAzul();     
-	ligarLedVermelho();
-	ligarLedVerde();
-}
-
-void robo_hardware::desligarTodosLeds()const{
-	desligarLedSmdVerde();
-	desligarLedSmdVermelho();
-	desligarLedAmarelo(); 
-	desligarLedAzul();     
-	desligarLedVermelho();
-	desligarLedVerde();
+void Estrategia::iniciar(){
+  garra.begin();
+  garra.fecharGarra();
+  garra.levantarBraco();
+  delay(1000);
 }
