@@ -4,6 +4,7 @@
 
 #include <Arduino.h>
 #include <Servo.h>
+#include <EEPROM.h>
 
 #include "pinagem.h"
 #include "Ultrasonic.h"
@@ -20,6 +21,19 @@ struct RGBC{
 	float green;
 	float blue;
 	float clear;
+};
+struct SensorCal {
+  uint16_t rBlack;
+  uint16_t gBlack;
+  uint16_t bBlack;
+  uint16_t rWhite;
+  uint16_t gWhite;
+  uint16_t bWhite;
+  bool valido;
+};
+struct CalibracaoCor {
+  SensorCal esquerda;
+  SensorCal direita;
 };
 class robo_hardware:private pinagem{
 private:
@@ -78,6 +92,9 @@ public:
 	RGBC lerSensorDeCorDir();
 	RGBC lerSensorDeCorEsq();
 
+	RGBC lerSensorDeCorDirNormatizado();
+	RGBC lerSensorDeCorEsqNormatizado();
+
   	//funcoes para o controle dos leds
 	void ligarLed(const int led)const;
 	void desligarLed(const int led)const;
@@ -101,6 +118,13 @@ public:
 	void ligarTodosLeds()const;
 	void desligarTodosLeds()const;
 
+	// --- funções de calibração e EEPROM ---
+  void calibrarCoresConjunta();   
+  void salvarCalibracao();        
+  void carregarCalibracao();      
+  String lerNomeCorEsq();         
+  String lerNomeCorDir();         
+
 private:
   	static int tipoSensorCor;
 
@@ -116,7 +140,11 @@ private:
 	Servo servoGarra;
 
 	static VL53L0X sensor;// = Adafruit_VL53L0X();
-
+	
+	static CalibracaoCor calib;
+	void lerMediaRGBdoSensor(bool esquerda, RGBC &out, uint8_t amostras = 10);
+  	void normalizarRGBComCal(const RGBC &raw, const SensorCal &sc, int &rNorm, int &gNorm, int &bNorm);
+  	String identificarCorPorRGB(int r, int g, int b);
 };
 
 static robo_hardware robo;

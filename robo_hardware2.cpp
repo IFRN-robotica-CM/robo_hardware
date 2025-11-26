@@ -1,5 +1,6 @@
 #include "robo_hardware2.h"
 #include <math.h>
+#include <EEPROM.h>
 
 int robo_hardware::tipoSensorCor;
 VL53L0X robo_hardware::sensor;
@@ -243,4 +244,205 @@ void robo_hardware::desligarTodosLeds()const{
 	desligarLedAzul();     
 	desligarLedVermelho();
 	desligarLedVerde();
+}
+
+#include <EEPROM.h> // garantir inclusão no .cpp também
+
+// definição da variável estática
+CalibracaoCor robo_hardware::calib = {
+  // valores iniciais marcando inválidos
+  {0,0,0, 0,0,0, false},
+  {0,0,0, 0,0,0, false}
+};
+
+// --- helper: ler média de N amostras do sensor (esquerda = true, direita = false)
+void robo_hardware::lerMediaRGBdoSensor(bool esquerda, RGBC &out, uint8_t amostras) {
+  uint32_t rSum = 0, gSum = 0, bSum = 0;
+  for (uint8_t i = 0; i < amostras; i++) {
+    RGBC tmp = (esquerda ? lerSensorDeCorEsq() : lerSensorDeCorDir());
+    rSum += (uint32_t) tmp.red;
+    gSum += (uint32_t) tmp.green;
+    bSum += (uint32_t) tmp.blue;
+    delay(60);
+  }
+  out.red   = (float)(rSum / amostras);
+  out.green = (float)(gSum / amostras);
+  out.blue  = (float)(bSum / amostras);
+  // clear não usado na média de calibração, mas pode ser adicionado se quiser
+}
+
+// --- normaliza raw RGB usando calibração do sensor para 0..255
+void robo_hardware::normalizarRGBComCal(const RGBC &raw, const SensorCal &sc, int &rNorm, int &gNorm, int &bNorm) {
+  // se calib inválida, apenas escala proporcionalmente (fallback)
+  if (!sc.valido) {
+    // evita divisão por zero: normaliza por soma
+    float soma = raw.red + raw.green + raw.blue;
+    if (soma <= 0.0f) { rNorm = gNorm = bNorm = 0; return; }
+    rNorm = (int)constrain((raw.red / soma) * 255.0f, 0, 255);
+    gNorm = (int)constrain((raw.green / soma) * 255.0f, 0, 255);
+    bNorm = (int)constrain((raw.blue / soma) * 255.0f, 0, 255);
+    return;
+  }
+
+  // map com constrain usando limites calibrados
+  uint16_t rClamped = (uint16_t)constrain((uint32_t)raw.red, (uint32_t)sc.rBlack, (uint32_t)sc.rWhite);
+  uint16_t gClamped = (uint16_t)constrain((uint32_t)raw.green, (uint32_t)sc.gBlack, (uint32_t)sc.gWhite);
+  uint16_t bClamped = (uint16_t)constrain((uint32_t)raw.blue, (uint32_t)sc.bBlack, (uint32_t)sc.bWhite);
+
+  // evita passar limites iguais -> retorna 0/255 direto se limites iguais
+  if (sc.rWhite == sc.rBlack) rNorm = 0; else rNorm = map(rClamped, sc.rBlack, sc.rWhite, 0, 255);
+  if (sc.gWhite == sc.gBlack) gNorm = 0; else gNorm = map(gClamped, sc.gBlack, sc.gWhite, 0, 255);
+  if (sc.bWhite == sc.bBlack) bNorm = 0; else bNorm = map(bClamped, sc.bBlack, sc.bWhite, 0, 255);
+
+  rNorm = constrain(rNorm, 0, 255);
+  gNorm = constrain(gNorm, 0, 255);
+  bNorm = constrain(bNorm, 0, 255);
+}
+
+// --- identifica cor a partir de RGB normalizado 0..255
+String robo_hardware::identificarCorPorRGB(int r, int g, int b) {
+  int maxVal = max(r, max(g, b));
+  int minVal = min(r, min(g, b));
+  int diff = maxVal - minVal;
+
+  if (maxVal < 30) return "Preto";
+  if (maxVal > 230 && diff < 20) return "Branco";
+  if (diff < 20) return "Cinza";
+
+  // lógica simples baseada em dominância e proximidade
+  if (r >= g && r >= b) {
+    // vermelho dominante
+    return "Vermelho";
+  }
+  if (g >= r && g >= b) {
+    return "Verde";
+  }
+  // b dominante
+  if (b >= r && b >= g) {
+    return "Azul";
+  }
+  return "Indefinido";
+}
+
+// --- salvar / carregar calibracao na EEPROM
+void robo_hardware::salvarCalibracao() {
+  EEPROM.put(ENDERECO_EEPROM, calib);
+  Serial.println(F("✅ Calibração de cores salva na EEPROM"));
+}
+
+void robo_hardware::carregarCalibracao() {
+  EEPROM.get(ENDERECO_EEPROM, calib);
+  // validação básica: verifica se pelo menos uma das flags está true e limites coerentes
+  bool okE = calib.esquerda.valido &&
+             (calib.esquerda.rWhite > calib.esquerda.rBlack) &&
+             (calib.esquerda.gWhite > calib.esquerda.gBlack) &&
+             (calib.esquerda.bWhite > calib.esquerda.bBlack);
+
+  bool okD = calib.direita.valido &&
+             (calib.direita.rWhite > calib.direita.rBlack) &&
+             (calib.direita.gWhite > calib.direita.gBlack) &&
+             (calib.direita.bWhite > calib.direita.bBlack);
+
+  if (okE || okD) {
+    Serial.println(F("📥 Carregada calibração da EEPROM:"));
+    if (okE) {
+      Serial.println(F(" - Esquerda válida"));
+    } else Serial.println(F(" - Esquerda inválida"));
+    if (okD) {
+      Serial.println(F(" - Direita válida"));
+    } else Serial.println(F(" - Direita inválida"));
+  } else {
+    Serial.println(F("⚠️ Nenhuma calibração válida na EEPROM"));
+    // marca inválidos para evitar uso incorreto
+    calib.esquerda.valido = false;
+    calib.direita.valido  = false;
+  }
+}
+
+// --- rotina de calibração conjunta (GUI via Serial) ---
+void robo_hardware::calibrarCoresConjunta() {
+  Serial.println(F("=== Calibracao conjunta dos sensores (esquerdo+direito) ==="));
+  delay(700);
+
+  // Função lambda para calibrar um sensor específico
+  auto calibrarSensor = [&](bool esquerda, SensorCal &sc, const char* nomeSensor) {
+    RGBC raw;
+    Serial.print(F("> Preparar para calibrar PRETO ("));
+    Serial.print(nomeSensor);
+    Serial.println(F("). Posicione e pressione ENTER no Serial Monitor."));
+    // espera ENTER
+    while (!Serial.available()) { delay(50); }
+    while (Serial.available()) Serial.read(); // limpa buffer
+
+    // lê média
+    lerMediaRGBdoSensor(esquerda, raw, 12);
+    sc.rBlack = (uint16_t) raw.red;
+    sc.gBlack = (uint16_t) raw.green;
+    sc.bBlack = (uint16_t) raw.blue;
+    Serial.print(F("  PRETO lido -> R:")); Serial.print(sc.rBlack);
+    Serial.print(F(" G:")); Serial.print(sc.gBlack);
+    Serial.print(F(" B:")); Serial.println(sc.bBlack);
+    delay(400);
+
+    Serial.print(F("> Agora calibrar BRANCO ("));
+    Serial.print(nomeSensor);
+    Serial.println(F("). Posicione e pressione ENTER no Serial Monitor."));
+    while (!Serial.available()) { delay(50); }
+    while (Serial.available()) Serial.read(); // limpa buffer
+
+    lerMediaRGBdoSensor(esquerda, raw, 12);
+    sc.rWhite = (uint16_t) raw.red;
+    sc.gWhite = (uint16_t) raw.green;
+    sc.bWhite = (uint16_t) raw.blue;
+    Serial.print(F("  BRANCO lido -> R:")); Serial.print(sc.rWhite);
+    Serial.print(F(" G:")); Serial.print(sc.gWhite);
+    Serial.print(F(" B:")); Serial.println(sc.bWhite);
+    delay(200);
+
+    // valida e marca
+    bool valido = (sc.rWhite > sc.rBlack) && (sc.gWhite > sc.gBlack) && (sc.bWhite > sc.bBlack);
+    sc.valido = valido;
+    if (valido) Serial.println(F("  OK: calibração válida."));
+    else Serial.println(F("  ERRO: limites inválidos, repita calibração."));
+    delay(300);
+  };
+
+  // calibrar esquerda
+  calibrarSensor(true, calib.esquerda, "Esquerdo");
+
+  // calibrar direita
+  calibrarSensor(false, calib.direita, "Direito");
+
+  // salvar
+  salvarCalibracao();
+  Serial.println(F("=== FIM calibração conjunta ==="));
+}
+
+// --- funções públicas para ler nome da cor (usa calibração correspondente) ---
+String robo_hardware::lerNomeCorEsq() {
+  RGBC raw = lerSensorDeCorEsq();
+  int rN, gN, bN;
+  normalizarRGBComCal(raw, calib.esquerda, rN, gN, bN);
+  return identificarCorPorRGB(rN, gN, bN);
+}
+
+String robo_hardware::lerNomeCorDir() {
+  RGBC raw = lerSensorDeCorDir();
+  int rN, gN, bN;
+  normalizarRGBComCal(raw, calib.direita, rN, gN, bN);
+  return identificarCorPorRGB(rN, gN, bN);
+}
+
+RGBC robo_hardware::lerSensorDeCorEsqNormatizado() {
+  RGBC raw = lerSensorDeCorEsq();
+  int rN, gN, bN;
+  normalizarRGBComCal(raw, calib.esquerda, rN, gN, bN);
+  return { (float)rN, (float)gN, (float)bN };
+}
+
+RGBC robo_hardware::lerSensorDeCorDirNormatizado() {
+  RGBC raw = lerSensorDeCorDir();
+  int rN, gN, bN;
+  normalizarRGBComCal(raw, calib.direita, rN, gN, bN);
+  return { (float)rN, (float)gN, (float)bN };
 }
