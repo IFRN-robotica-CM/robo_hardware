@@ -2,13 +2,30 @@
 #define SINALIZACAO_H
 
 #include "pinagem.h"
+class Led{
+    private:
+    int pino_led;
+    int tempo_anterior;
+    int intervalo_led;
+
+
+    public:
+    void config(int pino);
+
+    inline void ligarLed(){digitalWrite(pino_led, HIGH);}
+    inline void desligarLed(){digitalWrite(pino_led, LOW);}
+    void piscarLed();
+};
 
 class Sinalizacao{
     private:
-    int tempo_anterior;
-    int intervalo_led_verde;
-    int intervalo_led_amarelo;
-    int intervalo_led_vermelho;
+    // int tempo_anterior;
+    // int intervalo_led_verde;
+    // int intervalo_led_amarelo;
+    // int intervalo_led_vermelho;
+    Led verde;
+    Led amarelo;
+    Led vermelho;
 
     void piscarLed(const int PINO_LED, const int INTERVALO);
 
@@ -26,9 +43,13 @@ class Sinalizacao{
     inline void desligarAmarelo(){ digitalWrite(LED_AMARELO, LOW);}
     inline void desligarLedVermelho(){ digitalWrite(LED_VERMELHO, LOW);}
 
-    inline void piscarLedVerde(){ piscarLed(LED_VERDE, intervalo_led_verde);}
-    inline void piscarLedAmarelo(){ piscarLed(LED_AMARELO, intervalo_led_amarelo);}
-    inline void piscarLedVermelho(){ piscarLed(LED_VERMELHO, intervalo_led_vermelho);}
+    // inline void piscarLedVerde(){ piscarLed(LED_VERDE, intervalo_led_verde);}
+    // inline void piscarLedAmarelo(){ piscarLed(LED_AMARELO, intervalo_led_amarelo);}
+    // inline void piscarLedVermelho(){ piscarLed(LED_VERMELHO, intervalo_led_vermelho);}
+
+    inline void piscarLedVerde(){ verde.piscarLed();}
+    inline void piscarLedAmarelo(){ amarelo.piscarLed();}
+    inline void piscarLedVermelho(){ vermelho.piscarLed();}
 
     
 };
