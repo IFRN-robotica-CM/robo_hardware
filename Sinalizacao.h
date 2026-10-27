@@ -19,15 +19,12 @@ class Led{
 
 class Sinalizacao{
     private:
-    // int tempo_anterior;
-    int intervalo_led_verde;
-    int intervalo_led_amarelo;
-    int intervalo_led_vermelho;
     Led verde;
     Led amarelo;
     Led vermelho;
+    Led azul;
 
-    void piscarLed(const int PINO_LED, const int INTERVALO);
+    // void piscarLed(const int PINO_LED, const int INTERVALO);
 
     public:
 

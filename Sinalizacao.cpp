@@ -1,9 +1,6 @@
 #include "Sinalizacao.h"
 
 Sinalizacao::Sinalizacao(){
-    intervalo_led_verde     = 500;
-    intervalo_led_amarelo   = 500;
-    intervalo_led_vermelho  = 500;
 }
 
 void Sinalizacao::config(){
@@ -18,6 +15,7 @@ void Sinalizacao::config(){
     verde.config(LED_VERDE);
     amarelo.config(LED_AMARELO);
     vermelho.config(LED_VERMELHO);
+    azul.config(LED_AZUL);
 
 }
 
