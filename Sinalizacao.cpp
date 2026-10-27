@@ -31,7 +31,8 @@ void Sinalizacao::config(){
 //     }
 // }
 
-void Led::config(int pino){
+void Led::config(int pino, int intervalo){
+    intervalo_led = intervalo;
     pino_led = pino;
     pinMode(pino_led, OUTPUT);
 }

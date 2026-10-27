@@ -10,7 +10,7 @@ class Led{
 
 
     public:
-    void config(int pino);
+    void config(int pino, int intervalo=500);
 
     inline void ligarLed(){digitalWrite(pino_led, HIGH);}
     inline void desligarLed(){digitalWrite(pino_led, LOW);}
