@@ -20,9 +20,9 @@ class Led{
 class Sinalizacao{
     private:
     // int tempo_anterior;
-    // int intervalo_led_verde;
-    // int intervalo_led_amarelo;
-    // int intervalo_led_vermelho;
+    int intervalo_led_verde;
+    int intervalo_led_amarelo;
+    int intervalo_led_vermelho;
     Led verde;
     Led amarelo;
     Led vermelho;
@@ -53,5 +53,7 @@ class Sinalizacao{
 
     
 };
+
+
 
 #endif
