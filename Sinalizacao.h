@@ -19,15 +19,12 @@ class Led{
 
 class Sinalizacao{
     private:
-    // int tempo_anterior;
-    int intervalo_led_verde;
-    int intervalo_led_amarelo;
-    int intervalo_led_vermelho;
     Led verde;
     Led amarelo;
     Led vermelho;
+    Led azul;
 
-    void piscarLed(const int PINO_LED, const int INTERVALO);
+    // void piscarLed(const int PINO_LED, const int INTERVALO);
 
     public:
 
@@ -36,8 +33,9 @@ class Sinalizacao{
     void config();
 
     inline void ligarLedVerde(){ digitalWrite(LED_VERDE, HIGH);}
-    inline void ligarLedAmarelo(){ digitalWrite(LED_AMARELO, HIGH);}
+    inline void ligarLedAmarelo(){ amarelo.ligarLed();}
     inline void ligarLedVermelho(){ digitalWrite(LED_VERMELHO, HIGH);}
+    inline void ligarLedAzul(){ azul.ligarLed();}
 
     inline void desligarLedVerde(){ digitalWrite(LED_VERDE, LOW);}
     inline void desligarAmarelo(){ digitalWrite(LED_AMARELO, LOW);}
