@@ -48,9 +48,9 @@ private:
 
 	#define ENDERECO_EEPROM 0
 
-	Sinalizacao sinalizacao;
 
 public: 
+	Sinalizacao sinalizacao;
 	//construtor 
 	robo_hardware();
 
