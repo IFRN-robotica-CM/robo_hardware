@@ -179,18 +179,22 @@ RGBC robo_hardware::getRGBSensorDir() const{
 }
 
 void robo_hardware::canal00() const{
-	digitalWrite(SEL_A, LOW);
+	digitalWrite(SEL_A, HIGH);
 	digitalWrite(SEL_B, LOW);
+  digitalWrite(SEL_C, LOW); 
+
 }
 
 void robo_hardware::canal01() const{
 	digitalWrite(SEL_A, LOW);
 	digitalWrite(SEL_B, HIGH);
+  digitalWrite(SEL_C, LOW);   
 }
 
 void robo_hardware::canal10() const{
-	digitalWrite(SEL_A, HIGH);
+	digitalWrite(SEL_A, LOW);
 	digitalWrite(SEL_B, LOW);
+  digitalWrite(SEL_C, HIGH);   
 }
 
 RGBC robo_hardware::lerSensorDeCorEsq(){
