@@ -78,21 +78,28 @@ void robo_hardware::configurar(bool distanciaHabilitada, bool corHabilitada){
   //Configura os LEDs do robô
   sinalizacao.config();
 
-  if (corHabilitada) {
-    //Configura o sensor de cor
-    Wire.begin();
-    tcsD.begin();
-    tcsE.begin();
-  }
-
 	pinMode(SEL_A, OUTPUT);
 	pinMode(SEL_B, OUTPUT);
+  pinMode(SEL_C, OUTPUT);
 	
-	digitalWrite(SEL_A, LOW);
-	digitalWrite(SEL_B, HIGH);
+	// digitalWrite(SEL_A, LOW);
+	// digitalWrite(SEL_B, HIGH);
+
+
+
+  if (corHabilitada) {
+    //Configura o sensor de cor
+    canal00();
+    Wire.begin();
+    tcsE.begin();
+    canal10();
+    tcsD.begin();
+    
+  }
 	
   if(distanciaHabilitada){
     //configura sensor frontal de distância a laiser
+    canal01();
     sensor.init();
     sensor.setTimeout(500);
   }
@@ -199,16 +206,16 @@ void robo_hardware::canal10() const{
 
 RGBC robo_hardware::lerSensorDeCorEsq(){
 	canal00();
-	delay(100);
-	return getRGBSensorEsq();
-	delay(100);	
+	delay(10);
+  tcsE.begin();
+	return getRGBSensorEsq();	
 }
 
 RGBC robo_hardware::lerSensorDeCorDir(){
 	canal10();
-	delay(100);
+	delay(10);
+  tcsD.begin();
 	return getRGBSensorDir();
-	delay(100);
 }
 
 //----- funções para sensor Laiser-----//
