@@ -18,7 +18,7 @@ RGBC leituraSensorCorEsq;
 
  void setup(){
   Serial.begin(9600);
-  robo.configurar();
+  robo.configurar(false, true);
 }
 
 void loop(){
