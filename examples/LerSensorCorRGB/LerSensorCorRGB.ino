@@ -13,8 +13,8 @@
 
 
 //O tipo RGB e formado por quatro valores: vermelho, verde, azul, claridade
-RGBC leituraSensorCorDir; 
-RGBC leituraSensorCorEsq; 
+RGB leituraSensorCorDir; 
+RGB leituraSensorCorEsq; 
 
  void setup(){
   Serial.begin(9600);
@@ -22,7 +22,7 @@ RGBC leituraSensorCorEsq;
 }
 
 void loop(){
-  leituraSensorCorDir = robo.lerSensorDeCorDir(); //FUNCAO PARA LER VALOR DO SENSOR DE COR DIREITO
+  leituraSensorCorDir = robo.corDir.getRGBSensorDir(); //FUNCAO PARA LER VALOR DO SENSOR DE COR DIREITO
 
   //imprime os 3 valores retornardos pelo sensor cor
   Serial.print("Valor do sensor de cor DIR: ");
@@ -36,7 +36,7 @@ void loop(){
   
   Serial.println();
   
-  leituraSensorCorEsq = robo.lerSensorDeCorEsq(); //FUNCAO PARA LER VALOR DO SENSOR DE COR ESQUERDO
+  leituraSensorCorEsq = robo.corEsq.getRGBSensorEsq(); //FUNCAO PARA LER VALOR DO SENSOR DE COR ESQUERDO
 
   //imprime os 3 valores retornardos pelo sensor cor
   Serial.print("Valor do sensor de cor ESQ: ");
