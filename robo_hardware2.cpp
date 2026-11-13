@@ -8,8 +8,10 @@ VL53L0X robo_hardware::sensor;
 //----- construtor -----//
 robo_hardware::robo_hardware():
 	sonarFrontal(SONAR_TRIGGER_FRONTAL, SONAR_ECHO_FRONTAL),
-	tcsD(TCS34725_INTEGRATIONTIME_614MS,TCS34725_GAIN_1X),
-	tcsE(TCS34725_INTEGRATIONTIME_614MS,TCS34725_GAIN_1X){
+	// tcsD(TCS34725_INTEGRATIONTIME_614MS,TCS34725_GAIN_1X),
+	// tcsE(TCS34725_INTEGRATIONTIME_614MS,TCS34725_GAIN_1X),
+  corDir(SEL_C), corEsq(SEL_A)
+  {
 }
 
 //----- funções de controle dos motores -----//
@@ -81,19 +83,12 @@ void robo_hardware::configurar(bool distanciaHabilitada, bool corHabilitada){
 	pinMode(SEL_A, OUTPUT);
 	pinMode(SEL_B, OUTPUT);
   pinMode(SEL_C, OUTPUT);
-	
-	// digitalWrite(SEL_A, LOW);
-	// digitalWrite(SEL_B, HIGH);
-
-
 
   if (corHabilitada) {
     //Configura o sensor de cor
-    canal00();
     Wire.begin();
-    tcsE.begin();
-    canal10();
-    tcsD.begin();
+    corDir.config();
+    corEsq.config();
     
   }
 	
@@ -175,13 +170,13 @@ float robo_hardware::lerSensorSonarFrontal(){
 //----- funções para sensor de cor -----//
 RGBC robo_hardware::getRGBSensorEsq() const{
 	int red, green, blue, clear;
-	tcsE.getRawData(&red, &green, &blue, &clear);
+	// tcsE.getRawData(&red, &green, &blue, &clear);
 	return {red, green, blue, clear};
 }
 
 RGBC robo_hardware::getRGBSensorDir() const{
 	int red, green, blue, clear;
-	tcsD.getRawData(&red, &green, &blue, &clear);
+	// tcsD.getRawData(&red, &green, &blue, &clear);
 	return {red, green, blue, clear};
 }
 
@@ -202,20 +197,6 @@ void robo_hardware::canal10() const{
 	digitalWrite(SEL_A, LOW);
 	digitalWrite(SEL_B, LOW);
   digitalWrite(SEL_C, HIGH);   
-}
-
-RGBC robo_hardware::lerSensorDeCorEsq(){
-	canal00();
-	delay(10);
-  tcsE.begin();
-	return getRGBSensorEsq();	
-}
-
-RGBC robo_hardware::lerSensorDeCorDir(){
-	canal10();
-	delay(10);
-  tcsD.begin();
-	return getRGBSensorDir();
 }
 
 //----- funções para sensor Laiser-----//

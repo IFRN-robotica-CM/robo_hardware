@@ -11,6 +11,7 @@
 #include "Adafruit_TCS34725.h"
 #include <VL53L0X.h>
 #include "Sinalizacao.h"
+#include "CorTcs34.h"
 
 struct refletancia_dados{
 	float valorLedLigado;
@@ -51,6 +52,8 @@ private:
 
 public: 
 	Sinalizacao sinalizacao;
+	CorTcs34 corEsq;
+	CorTcs34 corDir;
 	//construtor 
 	robo_hardware();
 
@@ -135,9 +138,6 @@ private:
 
 
 	Ultrasonic sonarFrontal;
-
-	Adafruit_TCS34725 tcsD;// = Adafruit_TCS34725softi2c(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X, SDA_SENSOR_COR_ESQUERDO, SCL_SENSOR_COR_ESQUERDO);
-	Adafruit_TCS34725 tcsE;
     
 	Servo servoBraco;
 	Servo servoGarra;
